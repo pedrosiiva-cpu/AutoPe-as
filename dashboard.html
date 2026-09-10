@@ -4,67 +4,306 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Dashboard</title>
 </head>
 <body>
-    <aside class="barra-lateral">
-
-        <div class="logo">
-            <div class="logo-imagem">
-
-            </div>
-            <h1>Autopeças</h1>
-            <p>Gestão de Pagamentos</p>
-        </div>
-
-        <nav class="menu">
-            <a href="#" class="item-menuativo">
-                <span>🏠</span>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="#" class="item-menu">
-                <span>👤</span>
-                <span>Funcionários</span>
-            </a>
-
-            <a href="#" class="item-menu">
-                <span>$</span>
-                <span>Pagamentos</span>
-            </a>
-
-            <a href="#" class="item-menu">
-                <span>🔔</span>
-                <span>Prazos e Alertas</span>
-            </a>
-
-            <a href="#" class="item-menu">
-                <span>📊</span>
-                <span>Relátorios</span>
-            </a>
-
-            <a href="#" class="item-menu">
-                <span>⚙️</span>
-                <span>Configurações</span>
-            </a>
-        </nav>
-
-        <div class="sair">
-            <a href="" class="item-menu">
-                <span>➜]</span>
-                <span>Sair</span>
-            </a>
-        </div>
-    </aside>
-    
     <main class="conteudo">
         <header class="cabecalho">
             <div class="titulo">
                 <button class="botao-menu" type="button">
                     ☰
                 </button>
+
+                <div>
+                    <h2>Dashboard</h2>
+                    <p>Visão geral do sistema</p>
+                </div>
+            </div>
+
+            <div class="usuario">
+                <button type="button" class="botao-notificacao">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="numero-notificacao">3</span>
+                </button>
+                <div class="dados-usuario">
+                    <div class="icone-usuario">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+
+                    <div>
+                        <strong>Gestor Financeiro</strong>
+                        <span>Administrador</span>
+                    </div>
+                    <span class="seta"><i class="bi bi-arrow-down-short"></i></span>
+                </div>
             </div>
         </header>
+
+        <section class="painel">
+
+            <section class="cartoes">
+                <article class="card">
+                    <div class="icone-card">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <div class="dados-card">
+                        <span class="titulo-card">Funcionários Cadastrados</span>
+                        <strong class="valor-card">48</strong>
+                        <div class="texto-card">
+                            Ativos: 45
+                            <span><i class="bi bi-dot"></i></span>
+                            Inativos: 3
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="icone-card"><i class="bi bi-wallet2"></i></div>
+
+                    <div class="dados-card">
+                        <span class="titulo-card">Pagamentos Realizados</span>
+
+                        <strong class="valor-card">R$ 82.450,00</strong>
+
+                        <div class="texto-card">Este mês</div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="icone-card"><i class="bi bi-clock-fill"></i></div>
+
+                    <div class="dados-card">
+                        <span class="titulo-card">Pagamentos Pendentes</span>
+                        <strong class="valor-card">R$15.300,00</strong>
+                        <div class="texto-card">Este mês</div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="icone-card"><i class="bi bi-calendar3"></i></div>
+
+                    <div class="dados-card">
+                        <span class="titulo-card">Próximos Pagamentos</span>
+                        <strong class="valor-card">07</strong>
+                        <div class="texto-card">Nos próximos 7 dias</div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="parte-meio">
+
+                <article class="caixa pagamentos-recentes">
+                    <div class="cabecalho-box">
+                        <h3>Pagamentos Recentes</h3>
+                        <a href="#" class="botao-ver">Ver Todos</a>
+                    </div>
+
+                    <div class="area-tabela">
+                        <table class="tabela">
+                            <thead>
+                                <tr>
+                                    <th>Funcionários</th>
+                                    <th>Valor</th>
+                                    <th>Data do Pagamento</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="funcionario">
+                                            <div class="foto">JS</div>
+
+                                            <div class="dados-funcionario">
+                                                <strong>João da Silva</strong>
+
+                                                <span>Mecânico</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        R$2.500,00
+                                    </td>
+
+                                    <td>
+                                        05/09/2026
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="situacao pago">Pago</span>
+                                    </td>
+
+                                    <td>
+                                        <a href="#" class="botao-tres">:</a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="funcionario">
+                                            <div class="foto">JS</div>
+
+                                            <div class="dados-funcionario">
+                                                <strong>João da Silva</strong>
+
+                                                <span>Mecânico</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        R$2.500,00
+                                    </td>
+
+                                    <td>
+                                        05/09/2026
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="situacao pendente">Pendente</span>
+                                    </td>
+
+                                    <td>
+                                        <a href="#" class="botao-tres">:</a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="funcionario">
+                                            <div class="foto">JS</div>
+
+                                            <div class="dados-funcionario">
+                                                <strong>João da Silva</strong>
+
+                                                <span>Mecânico</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        R$2.500,00
+                                    </td>
+
+                                    <td>
+                                        05/09/2026
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="situacao pago">Pago</span>
+                                    </td>
+
+                                    <td>
+                                        <a href="#" class="botao-tres">:</a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="funcionario">
+                                            <div class="foto">JS</div>
+
+                                            <div class="dados-funcionario">
+                                                <strong>João da Silva</strong>
+
+                                                <span>Mecânico</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        R$2.500,00
+                                    </td>
+
+                                    <td>
+                                        05/09/2026
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="situacao pendente">Pendente</span>
+                                    </td>
+
+                                    <td>
+                                        <a href="#" class="botao-tres">:</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>                        
+                    </div>
+                </article>
+
+                <article class="box alertas">
+
+                    <div class="cabecalho-box">
+                        <h3>Próximos prazos e alertas</h3>
+                        <a href="#">Ver Todos</a>
+                    </div>
+
+                    <div class="bloco-atrasado">
+                        <div class="titulo-alerta">
+                            <div class="icone-alerta">
+                                <span>!</span>
+                                <strong>Pagamento(s) atrasados</strong>
+                            </div>
+                            <span class="quantidade">1</span>
+                        </div>
+
+                        <div class="item-alerta">
+                            <div>
+                                <strong>Carlos Santos - Estoquista</strong>
+                                <span>Vencimento: 10/09/2026</span>
+                            </div>
+                            <strong>Atrasado há um dia</strong>
+                        </div>
+                    </div>
+
+                    <div class="bloco-proximo">
+                        <div class="titulo-alerta">
+                            <div class="icone-alerta">
+                                <span>!</span>
+                                <strong>Próximos pagamentos</strong>
+                            </div>
+                            <span class="quantidade">3</span>
+                        </div>
+
+                        <div class="item-alerta">
+                            <div>
+                                <strong>Ana Paula - Atendente</strong>
+                                <span>Vencimento: 11/09/2026</span>
+                            </div>
+                            <strong>Vence em um dia</strong>
+                        </div>
+
+                        <div class="item-alerta">
+                            <div>
+                                <strong>Ricardo Mendes - Vendedor</strong>
+                                <span>Vencimento: 15/09/2026</span>
+                            </div>
+                            <strong>Vence em 6 dias</strong>
+                        </div>
+
+                        <div class="item-alerta">
+                            <div>
+                                <strong>João da Silva - Mecânico</strong>
+                                <span>Vencimento: 05/10/2026</span>
+                            </div>
+                            <strong>Vence em 26 dias</strong>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="box resumo-financeiro">
+                <div class="cabecalho-box">
+                    <h3>Resumo financeiro (Este mês)</h3>
+                    <select class="seletor-mes">
+                        <option>Este mês</option>
+                        <option>Mês passado</option>
+                    </select>
+                </div>
+            </section>
+
+        </section>
     </main>
 </body>
 </html>
