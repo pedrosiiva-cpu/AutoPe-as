@@ -3,11 +3,12 @@ $totalPago = 82450.00;
 $totalPendente = 15300.00;
 $totalFuncionarios = 48;
 $mediaSalarial = 2280.56;
-$labelsMeses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set"];
-$valoresMeses = [4200, 5100, 4800, 6200, 7000, 7500, 8100, 9200, 8850];
+$labelsMeses = ["Mai/2026", "Jun/2026", "Jul/2026", "Ago/2026", "Set/2026"];
+$valoresPago = [24000, 26500, 31000, 33000, 25000];
+$valoresPendente = [7000, 6000, 7500, 6800, 4500];
 $somaTotal = $totalPago + $totalPendente;
-$percPago = $somaTotal > 0 ? round(($totalPago / $somaTotal) * 100, 1) : 0;
-$percPendente = $somaTotal > 0 ? round(($totalPendente / $somaTotal) * 100, 1) : 0;
+$percPago = $somaTotal > 0 ? number_format(($totalPago / $somaTotal) * 100, 1, ',', '') : '0,0';
+$percPendente = $somaTotal > 0 ? number_format(($totalPendente / $somaTotal) * 100, 1, ',', '') : '0,0';
 
 $maioresPagamentos = [
     ["nome" => "Maria Oliveira", "cargo" => "Financeiro", "valor" => 2800.00, "data" => "2026-09-05"],
@@ -37,41 +38,43 @@ $pendentes = [
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <img src="./imagens/remove.png" alt="AutoPeças" class="logo-img">
+    <div class="painel dashboard-container">
+        <aside class="menu-lateral sidebar">
+            <div class="menu-topo sidebar-header">
+                <a href="#" class="link-logo">
+                    <img src="./imagens/remove.png" alt="AutoPeças" class="logo logo-img">
+                </a>
             </div>
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
-                <a href="#" class="nav-link"><i class="fa-solid fa-users"></i> Funcionários</a>
-                <a href="#" class="nav-link"><i class="fa-solid fa-dollar-sign"></i> Pagamentos</a>
-                <a href="#" class="nav-link"><i class="fa-regular fa-bell"></i> Prazos e Alertas</a>
-                <a href="#" class="nav-link active"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
-                <a href="#" class="nav-link"><i class="fa-solid fa-gear"></i> Configurações</a>
+            <nav class="navegacao sidebar-nav">
+                <a href="funcionarios.html" class="link nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="#" class="link nav-link"><i class="fa-solid fa-users"></i> Funcionários</a>
+                <a href="#" class="link nav-link"><i class="fa-solid fa-dollar-sign"></i> Pagamentos</a>
+                <a href="#" class="link nav-link"><i class="fa-regular fa-bell"></i> Prazos e Alertas</a>
+                <a href="#" class="link nav-link ativo active"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+                <a href="#" class="link nav-link"><i class="fa-solid fa-gear"></i> Configurações</a>
             </nav>
-            <div class="sidebar-footer">
-                <a href="#" class="nav-link text-red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+            <div class="menu-rodape sidebar-footer">
+                <a href="#" class="link nav-link texto-vermelho text-red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
             </div>
         </aside>
 
-        <main class="main-content">
-            <header class="topbar">
-                <div class="topbar-left">
-                    <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+        <main class="conteudo main-content">
+            <header class="cabecalho topbar">
+                <div class="cabecalho-esq topbar-left">
+                    <button class="btn-menu menu-btn"><i class="fa-solid fa-bars"></i></button>
                     <div>
                         <h1>Relatórios</h1>
-                        <p class="subtitle">Veja análises e relatórios financeiros da empresa.</p>
+                        <p class="subtitulo subtitle">Veja análises e relatórios financeiros da empresa.</p>
                     </div>
                 </div>
-                <div class="topbar-right">
-                    <div class="notification">
+                <div class="cabecalho-dir topbar-right">
+                    <div class="notificacao notification">
                         <i class="fa-regular fa-bell"></i>
-                        <span class="badge">3</span>
+                        <span class="alerta badge">3</span>
                     </div>
-                    <div class="user-profile">
-                        <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                        <div class="user-info">
+                    <div class="perfil user-profile">
+                        <div class="foto avatar"><i class="fa-regular fa-user"></i></div>
+                        <div class="info-usuario user-info">
                             <strong>Gestor Financeiro</strong>
                             <span>Administrador</span>
                         </div>
@@ -80,91 +83,95 @@ $pendentes = [
                 </div>
             </header>
 
-            <section class="filters-section">
-                <div class="filter-group">
+            <section class="filtros filters-section">
+                <div class="grupo-filtro filter-group">
                     <label>Tipo de relatório</label>
                     <select>
                         <option>Resumo financeiro</option>
                     </select>
                 </div>
-                <div class="filter-group">
+                <div class="grupo-filtro filter-group">
                     <label>Período</label>
-                    <div class="input-with-icon">
+                    <div class="input-icone input-with-icon">
                         <input type="text" value="01/08/2026 - 30/09/2026" readonly>
                         <i class="fa-regular fa-calendar"></i>
                     </div>
                 </div>
-                <div class="filter-group">
+                <div class="grupo-filtro filter-group">
                     <label>Funcionário</label>
                     <select>
                         <option>Todos</option>
                     </select>
                 </div>
-                <div class="filter-actions">
-                    <button class="btn btn-outline"><i class="fa-solid fa-rotate-right"></i> LIMPAR FILTROS</button>
-                    <button class="btn btn-solid"><i class="fa-solid fa-download"></i> GERAR RELATÓRIO</button>
+                <div class="acoes-filtro filter-actions">
+                    <button class="botao botao-vazio btn btn-outline"><i class="fa-solid fa-rotate-right"></i> LIMPAR FILTROS</button>
+                    <button class="botao botao-cheio btn btn-solid"><i class="fa-solid fa-download"></i> GERAR RELATÓRIO</button>
                 </div>
             </section>
 
-            <section class="kpi-section">
-                <div class="kpi-card">
-                    <div class="kpi-icon icon-green"><i class="fa-solid fa-dollar-sign"></i></div>
-                    <div class="kpi-details">
-                        <span class="kpi-title">Total pago no período</span>
-                        <strong class="kpi-value text-green">R$ <?= number_format($totalPago, 2, ',', '.'); ?></strong>
-                        <span class="kpi-sub">Pagamentos realizados</span>
+            <section class="resumos kpi-section">
+                <div class="cartao kpi-card">
+                    <div class="icone-cartao icone-verde kpi-icon icon-green"><i class="fa-solid fa-dollar-sign"></i></div>
+                    <div class="detalhes-cartao kpi-details">
+                        <span class="titulo-cartao kpi-title">Total pago no período</span>
+                        <strong class="valor-cartao kpi-value texto-verde text-green">R$ <?= number_format($totalPago, 2, ',', '.'); ?></strong>
+                        <span class="sub-cartao kpi-sub">Pagamentos realizados</span>
                     </div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon icon-orange"><i class="fa-regular fa-clock"></i></div>
-                    <div class="kpi-details">
-                        <span class="kpi-title">Total pendente</span>
-                        <strong class="kpi-value text-orange">R$ <?= number_format($totalPendente, 2, ',', '.'); ?></strong>
-                        <span class="kpi-sub">Pagamentos não realizados</span>
+                <div class="cartao kpi-card">
+                    <div class="icone-cartao icone-laranja kpi-icon icon-orange"><i class="fa-regular fa-clock"></i></div>
+                    <div class="detalhes-cartao kpi-details">
+                        <span class="titulo-cartao kpi-title">Total pendente</span>
+                        <strong class="valor-cartao kpi-value texto-laranja text-orange">R$ <?= number_format($totalPendente, 2, ',', '.'); ?></strong>
+                        <span class="sub-cartao kpi-sub">Pagamentos não realizados</span>
                     </div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon icon-blue"><i class="fa-regular fa-user"></i></div>
-                    <div class="kpi-details">
-                        <span class="kpi-title">Total de funcionários</span>
-                        <strong class="kpi-value text-blue"><?= $totalFuncionarios; ?></strong>
-                        <span class="kpi-sub">Funcionários cadastrados</span>
+                <div class="cartao kpi-card">
+                    <div class="icone-cartao icone-azul kpi-icon icon-blue"><i class="fa-regular fa-user"></i></div>
+                    <div class="detalhes-cartao kpi-details">
+                        <span class="titulo-cartao kpi-title">Total de funcionários</span>
+                        <strong class="valor-cartao kpi-value texto-azul text-blue"><?= $totalFuncionarios; ?></strong>
+                        <span class="sub-cartao kpi-sub">Funcionários cadastrados</span>
                     </div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon icon-purple"><i class="fa-regular fa-calendar-days"></i></div>
-                    <div class="kpi-details">
-                        <span class="kpi-title">Média salarial</span>
-                        <strong class="kpi-value text-purple">R$ <?= number_format($mediaSalarial, 2, ',', '.'); ?></strong>
-                        <span class="kpi-sub">Salário médio da equipe</span>
+                <div class="cartao kpi-card">
+                    <div class="icone-cartao icone-roxo kpi-icon icon-purple"><i class="fa-regular fa-calendar-days"></i></div>
+                    <div class="detalhes-cartao kpi-details">
+                        <span class="titulo-cartao kpi-title">Média salarial</span>
+                        <strong class="valor-cartao kpi-value texto-roxo text-purple">R$ <?= number_format($mediaSalarial, 2, ',', '.'); ?></strong>
+                        <span class="sub-cartao kpi-sub">Salário médio da equipe</span>
                     </div>
                 </div>
             </section>
 
-            <section class="charts-section">
-                <div class="chart-container">
+            <section class="graficos charts-section">
+                <div class="caixa-grafico chart-container">
                     <h3>Pagamentos por mês</h3>
                     <div class="canvas-wrapper" style="height: 250px;">
                         <canvas id="barChart"></canvas>
                     </div>
                 </div>
-                <div class="chart-container">
+                <div class="caixa-grafico chart-container">
                     <h3>Pagamentos por situação</h3>
-                    <div class="canvas-wrapper donut-wrapper" style="height: 250px; position: relative; display: flex; align-items: center; justify-content: center; gap: 20px; flex-direction: row;">
-                        <div style="width: 200px; height: 200px;">
+                    <div class="area-rosca canvas-wrapper donut-wrapper">
+                        <div class="donut-chart-box">
                             <canvas id="donutChart"></canvas>
+                            <div class="donut-center-info">
+                                <span class="donut-center-title">Total</span>
+                                <strong class="donut-center-val">R$ <?= number_format($somaTotal, 2, ',', '.'); ?></strong>
+                            </div>
                         </div>
-                        <div class="donut-legend" style="width: auto;">
-                            <div class="legend-item">
-                                <span class="dot dot-green"></span>
-                                <div class="legend-text">
+                        <div class="legenda-rosca donut-legend">
+                            <div class="item-legenda legend-item">
+                                <span class="ponto ponto-verde dot dot-green"></span>
+                                <div class="texto-legenda legend-text">
                                     <span>Pagamentos realizados</span>
                                     <strong>R$ <?= number_format($totalPago, 2, ',', '.'); ?> <small>(<?= $percPago; ?>%)</small></strong>
                                 </div>
                             </div>
-                            <div class="legend-item" style="margin-top: 15px;">
-                                <span class="dot dot-orange"></span>
-                                <div class="legend-text">
+                            <div class="item-legenda legend-item">
+                                <span class="ponto ponto-laranja dot dot-orange"></span>
+                                <div class="texto-legenda legend-text">
                                     <span>Pagamentos pendentes</span>
                                     <strong>R$ <?= number_format($totalPendente, 2, ',', '.'); ?> <small>(<?= $percPendente; ?>%)</small></strong>
                                 </div>
@@ -174,8 +181,8 @@ $pendentes = [
                 </div>
             </section>
 
-            <section class="tables-section">
-                <div class="table-container">
+            <section class="tabelas tables-section">
+                <div class="caixa-tabela table-container">
                     <h3>Maiores pagamentos do período</h3>
                     <table>
                         <thead>
@@ -199,10 +206,10 @@ $pendentes = [
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <button class="btn-view-all">VER TODOS</button>
+                    <button class="btn-ver-todos btn-view-all">VER TODOS</button>
                 </div>
 
-                <div class="table-container">
+                <div class="caixa-tabela table-container">
                     <h3>Pagamentos pendentes</h3>
                     <table>
                         <thead>
@@ -223,18 +230,18 @@ $pendentes = [
                                 <td><?= htmlspecialchars($row['cargo']); ?></td>
                                 <td>R$ <?= number_format($row['valor'], 2, ',', '.'); ?></td>
                                 <td><?= date('d/m/Y', strtotime($row['data_prevista'])); ?></td>
-                                <td class="<?= $row['dias_atraso'] > 0 ? 'text-red' : ''; ?>">
+                                <td class="<?= $row['dias_atraso'] > 0 ? 'texto-vermelho text-red' : ''; ?>">
                                     <?= $row['dias_atraso'] > 0 ? $row['dias_atraso'] . ' dias' : '-'; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <button class="btn-view-all">VER TODOS</button>
+                    <button class="btn-ver-todos btn-view-all">VER TODOS</button>
                 </div>
             </section>
 
-            <footer class="main-footer">
+            <footer class="rodape main-footer">
                 <i class="fa-solid fa-circle-info"></i> Relatórios atualizados em tempo real. Última atualização: <?= date('d/m/Y H:i'); ?>
             </footer>
         </main>
@@ -242,42 +249,111 @@ $pendentes = [
 
     <script>
     const labelsMeses = <?= json_encode($labelsMeses); ?>;
-    const valoresMeses = <?= json_encode($valoresMeses); ?>;
+    const valoresPago = <?= json_encode($valoresPago); ?>;
+    const valoresPendente = <?= json_encode($valoresPendente); ?>;
 
     new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
             labels: labelsMeses,
-            datasets: [{
-                label: 'Pagamentos (R$)',
-                data: valoresMeses,
-                backgroundColor: '#3b82f6',
-                borderRadius: 6
-            }]
+            datasets: [
+                {
+                    label: 'Pago',
+                    data: valoresPago,
+                    backgroundColor: '#22c55e',
+                    borderRadius: 4,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.6
+                },
+                {
+                    label: 'Pendente',
+                    data: valoresPendente,
+                    backgroundColor: '#f97316',
+                    borderRadius: 4,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.6
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        boxHeight: 12,
+                        usePointStyle: false,
+                        font: { size: 12, family: 'Inter' },
+                        color: '#374151',
+                        padding: 15
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 40000,
+                    ticks: {
+                        stepSize: 10000,
+                        callback: function(value) {
+                            return 'R$ ' + value.toLocaleString('pt-BR');
+                        },
+                        font: { size: 11, family: 'Inter' },
+                        color: '#6b7280'
+                    },
+                    grid: {
+                        color: '#f3f4f6'
+                    },
+                    border: {
+                        display: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: { size: 11, family: 'Inter' },
+                        color: '#6b7280'
+                    },
+                    border: {
+                        color: '#e5e7eb'
+                    }
+                }
+            }
         }
     });
 
     new Chart(document.getElementById('donutChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Pago', 'Pendente'],
+            labels: ['Pagamentos realizados', 'Pagamentos pendentes'],
             datasets: [{
                 data: [<?= $totalPago; ?>, <?= $totalPendente; ?>],
-                backgroundColor: ['#22c55e', '#f97316'],
-                borderWidth: 0
+                backgroundColor: ['#22c55e', '#ea580c'],
+                borderWidth: 0,
+                hoverOffset: 3
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            cutout: '70%'
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return ' R$ ' + Number(context.raw).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                        }
+                    }
+                }
+            },
+            cutout: '72%'
         }
     });
     </script>

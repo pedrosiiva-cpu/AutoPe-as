@@ -1,20 +1,28 @@
+
+
+
 <?php
 
 $erro = "";
-$sucesso = "";
+
+$arquivoUsuarios = __DIR__ . "/usuarios.json";
+$usuarios = ["admin" => "123456"];
+if (file_exists($arquivoUsuarios)) {
+    $dados = json_decode(file_get_contents($arquivoUsuarios), true);
+    if (is_array($dados)) {
+        $usuarios = $dados;
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $usuario = $_POST["usuario"] ?? "";
+    $usuario = trim($_POST["usuario"] ?? "");
     $senha = $_POST["senha"] ?? "";
 
-    // Usuário e senha para teste
-    $usuarioCorreto = "admin";
-    $senhaCorreta = "123456";
+    if (isset($usuarios[$usuario]) && $usuarios[$usuario] === $senha) {
 
-    if ($usuario === $usuarioCorreto && $senha === $senhaCorreta) {
-
-        $sucesso = "Login realizado com sucesso!";
+        header("Location: funcionarios.html");
+        exit;
 
     } else {
 
@@ -61,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         </div>
 
-
         <div class="direita">
 
             <div class="formulario">
@@ -72,24 +79,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     Acesse o sistema para continuar
                 </p>
 
-
                 <?php if ($erro != ""): ?>
 
-                    <p style="color: red;">
-                        <?= $erro ?>
+                    <p style="color: #ef4444; background: #fef2f2; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        <?= htmlspecialchars($erro) ?>
                     </p>
 
                 <?php endif; ?>
-
-
-                <?php if ($sucesso != ""): ?>
-
-                    <p style="color: green;">
-                        <?= $sucesso ?>
-                    </p>
-
-                <?php endif; ?>
-
 
                 <form action="login.php" method="POST">
 
@@ -108,13 +104,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 id="usuario"
                                 name="usuario"
                                 placeholder="Digite seu usuário"
+                                value="<?= htmlspecialchars($_POST['usuario'] ?? '') ?>"
                                 required
                             >
 
                         </div>
 
                     </div>
-
 
                     <div class="grupo">
 
@@ -134,12 +130,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 required
                             >
 
-                            <i class="fa-regular fa-eye olho"></i>
+                            <i class="fa-regular fa-eye olho" onclick="toggleSenha('senha', this)"></i>
 
                         </div>
 
                     </div>
-
 
                     <div class="acoes">
 
@@ -156,19 +151,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                         </label>
 
-
-                        <a href="#" class="esqueceu">
+                        <a href="editaSenha.php" class="esqueceu">
                             Esqueceu sua senha?
                         </a>
 
                     </div>
 
-
-                    <button
-                        type="submit"
-                        class="botao"
-                       
-                    >
+                    <button type="submit" class="botao">
                         ENTRAR
                     </button>
 
@@ -179,6 +168,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
 
     </div>
+
+    <script>
+    function toggleSenha(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+    </script>
 
 </body>
 
