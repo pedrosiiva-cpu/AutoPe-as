@@ -144,6 +144,54 @@ if ($totalGeral > 0) {
     $porcentagemPendente = 0;
 }
 
+$semanasGrafico = [];
+
+$dia = 1;
+$ultimoDia = date('t');
+
+while ($dia <= $ultimoDia) {
+
+    $inicioSemana = $dia;
+    $fimSemana = min($dia + 6, $ultimoDia);
+
+    $dataInicio = date(
+        'Y-m-' . str_pad($inicioSemana, 2, '0', STR_PAD_LEFT)
+    );
+
+    $dataFim = date(
+        'Y-m-' . str_pad($fimSemana, 2, '0', STR_PAD_LEFT)
+    );
+
+    $consulta = $pdo->query("
+        SELECT COALESCE(SUM(valor), 0) AS total
+        FROM pagamentos
+        WHERE status = 'pago'
+        AND data_pagamento BETWEEN '$dataInicio' AND '$dataFim'
+    ");
+
+    $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+    $valor = $resultado['total'];
+
+    $semanasGrafico[] = [
+        'inicio' => $inicioSemana,
+        'fim' => $fimSemana,
+        'valor' => $valor
+    ];
+
+    $dia += 7;
+}
+
+$maiorValor = 0;
+
+foreach ($semanasGrafico as $semana) {
+
+    if ($semana['valor'] > $maiorValor) {
+        $maiorValor = $semana['valor'];
+    }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -698,70 +746,62 @@ if ($totalGeral > 0) {
 
                     <div class="valores-grafico">
 
-                        <span>R$ 40.000</span>
-                        <span>R$ 30.000</span>
-                        <span>R$ 20.000</span>
-                        <span>R$ 10.000</span>
-                        <span>R$ 0</span>
+                        <span>
+                            <?= dinheiro($maiorValor) ?>
+                        </span>
+
+                        <span>
+                            <?= dinheiro($maiorValor * 0.75) ?>
+                        </span>
+
+                        <span>
+                            <?= dinheiro($maiorValor * 0.50) ?>
+                        </span>
+
+                        <span>
+                            <?= dinheiro($maiorValor * 0.25) ?>
+                        </span>
+
+                        <span>
+                            R$ 0
+                        </span>
 
                     </div>
 
 
                     <div class="barras">
 
-                        <div class="barra-item">
+                        <?php foreach ($semanasGrafico as $semana): ?>
 
-                            <div class="barra"></div>
+                            <?php
 
-                            <span>
-                                01 a 07 <br> Set
-                            </span>
+                            if ($maiorValor > 0) {
+                                $altura = ($semana['valor'] / $maiorValor) * 100;
+                            } else {
+                                $altura = 0;
+                            }
 
-                        </div>
+                            ?>
 
+                            <div class="barra-item">
 
-                        <div class="barra-item">
+                                <div
+                                    class="barra"
+                                    style="height: <?= $altura ?>%;"
+                                    title="<?= dinheiro($semana['valor']) ?>"
+                                ></div>
 
-                            <div class="barra"></div>
+                                <span>
+                                    <?= str_pad($semana['inicio'], 2, '0', STR_PAD_LEFT) ?>
+                                    a
+                                    <?= str_pad($semana['fim'], 2, '0', STR_PAD_LEFT) ?>
+                                    <br>
+                                    <?= date('M', strtotime($inicioMes)) ?>
+                                </span>
 
-                            <span>
-                                08 a 14 <br> Set
-                            </span>
+                            </div>
 
-                        </div>
-
-
-                        <div class="barra-item">
-
-                            <div class="barra"></div>
-
-                            <span>
-                                15 a 21 <br> Set
-                            </span>
-
-                        </div>
-
-
-                        <div class="barra-item">
-
-                            <div class="barra"></div>
-
-                            <span>
-                                22 a 28 <br> Set
-                            </span>
-
-                        </div>
-
-
-                        <div class="barra-item">
-
-                            <div class="barra"></div>
-
-                            <span>
-                                29 a 05 <br> Set
-                            </span>
-
-                        </div>
+                        <?php endforeach; ?>
 
                     </div>
 
