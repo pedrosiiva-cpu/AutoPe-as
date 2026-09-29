@@ -31,7 +31,7 @@ exit;
 $funcionario = $registro;
 }
 
-$cargosPadrao = ['Mecânico','Financeiro','Estoquista','Atendente','Vendedor','Auxiliar Administrativo','Consultora de Peças'];
+$cargosPadrao = ['Mecânico','Financeiro','Estoquista','Atendente','Vendedor','Auxiliar Administrativo','Consultor de Peças'];
 if ($funcionario['cargo'] !== '' && !in_array($funcionario['cargo'], $cargosPadrao, true)) {
 $cargosPadrao[] = $funcionario['cargo'];
 }
