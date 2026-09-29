@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 require_once "crud.php";
@@ -194,9 +195,10 @@ foreach ($semanasGrafico as $semana) {
 
 ?>
 
+=======
+>>>>>>> 4402300a28224e9b2f3c78d5724e958d7c7cdfd2
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -204,15 +206,10 @@ foreach ($semanasGrafico as $semana) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Dashboard</title>
 </head>
-
 <body>
-
     <main class="conteudo">
-
         <header class="cabecalho">
-
             <div class="titulo">
-
                 <button class="botao-menu" type="button">
                     ☰
                 </button>
@@ -221,25 +218,14 @@ foreach ($semanasGrafico as $semana) {
                     <h2>Dashboard</h2>
                     <p>Visão geral do sistema</p>
                 </div>
-
             </div>
 
-
             <div class="usuario">
-
                 <button type="button" class="botao-notificacao">
-
                     <i class="bi bi-bell-fill"></i>
-
-                    <span class="numero-notificacao">
-                        <?php echo count($atrasados); ?>
-                    </span>
-
+                    <span class="numero-notificacao">3</span>
                 </button>
-
-
                 <div class="dados-usuario">
-
                     <div class="icone-usuario">
                         <i class="bi bi-person-circle"></i>
                     </div>
@@ -248,159 +234,74 @@ foreach ($semanasGrafico as $semana) {
                         <strong>Gestor Financeiro</strong>
                         <span>Administrador</span>
                     </div>
-
-                    <span class="seta">
-                        <i class="bi bi-arrow-down-short"></i>
-                    </span>
-
+                    <span class="seta"><i class="bi bi-arrow-down-short"></i></span>
                 </div>
-
             </div>
-
         </header>
-
 
         <section class="painel">
 
-
             <section class="cartoes">
-
                 <article class="card">
-
                     <div class="icone-card">
                         <i class="bi bi-people-fill"></i>
                     </div>
 
                     <div class="dados-card">
-
-                        <span class="titulo-card">
-                            Funcionários Cadastrados
-                        </span>
-
-                        <strong class="valor-card">
-                            <?php echo $funcionarios['total']; ?>
-                        </strong>
-
+                        <span class="titulo-card">Funcionários Cadastrados</span>
+                        <strong class="valor-card">48</strong>
                         <div class="texto-card">
-
-                            Ativos:
-                            <?php echo $funcionarios['ativos']; ?>
-
-                            <span>
-                                <i class="bi bi-dot"></i>
-                            </span>
-
-                            Inativos:
-                            <?php echo $funcionarios['inativos']; ?>
-
+                            Ativos: 45
+                            <span><i class="bi bi-dot"></i></span>
+                            Inativos: 3
                         </div>
-
                     </div>
-
                 </article>
-
 
                 <article class="card">
-
-                    <div class="icone-card">
-                        <i class="bi bi-wallet2"></i>
-                    </div>
+                    <div class="icone-card"><i class="bi bi-wallet2"></i></div>
 
                     <div class="dados-card">
+                        <span class="titulo-card">Pagamentos Realizados</span>
 
-                        <span class="titulo-card">
-                            Pagamentos Realizados
-                        </span>
+                        <strong class="valor-card">R$ 82.450,00</strong>
 
-                        <strong class="valor-card">
-                            <?php echo dinheiro($totalPago); ?>
-                        </strong>
-
-                        <div class="texto-card">
-                            Este mês
-                        </div>
-
+                        <div class="texto-card">Este mês</div>
                     </div>
-
                 </article>
-
 
                 <article class="card">
-
-                    <div class="icone-card">
-                        <i class="bi bi-clock-fill"></i>
-                    </div>
+                    <div class="icone-card"><i class="bi bi-clock-fill"></i></div>
 
                     <div class="dados-card">
-
-                        <span class="titulo-card">
-                            Pagamentos Pendentes
-                        </span>
-
-                        <strong class="valor-card">
-                            <?php echo dinheiro($totalPendente); ?>
-                        </strong>
-
-                        <div class="texto-card">
-                            Este mês
-                        </div>
-
+                        <span class="titulo-card">Pagamentos Pendentes</span>
+                        <strong class="valor-card">R$15.300,00</strong>
+                        <div class="texto-card">Este mês</div>
                     </div>
-
                 </article>
-
 
                 <article class="card">
-
-                    <div class="icone-card">
-                        <i class="bi bi-calendar3"></i>
-                    </div>
+                    <div class="icone-card"><i class="bi bi-calendar3"></i></div>
 
                     <div class="dados-card">
-
-                        <span class="titulo-card">
-                            Próximos Pagamentos
-                        </span>
-
-                        <strong class="valor-card">
-                            <?php echo $proximos['total']; ?>
-                        </strong>
-
-                        <div class="texto-card">
-                            Nos próximos 7 dias
-                        </div>
-
+                        <span class="titulo-card">Próximos Pagamentos</span>
+                        <strong class="valor-card">07</strong>
+                        <div class="texto-card">Nos próximos 7 dias</div>
                     </div>
-
                 </article>
-
             </section>
-
 
             <section class="parte-meio">
 
-
                 <article class="caixa pagamentos-recentes">
-
                     <div class="cabecalho-box">
-
-                        <h3>
-                            Pagamentos Recentes
-                        </h3>
-
-                        <a href="#" class="botao-ver">
-                            Ver Todos
-                        </a>
-
+                        <h3>Pagamentos Recentes</h3>
+                        <a href="#" class="botao-ver">Ver Todos</a>
                     </div>
 
-
                     <div class="area-tabela">
-
                         <table class="tabela">
-
                             <thead>
-
                                 <tr>
                                     <th>Funcionários</th>
                                     <th>Valor</th>
@@ -408,343 +309,230 @@ foreach ($semanasGrafico as $semana) {
                                     <th>Status</th>
                                     <th></th>
                                 </tr>
-
                             </thead>
-
-
                             <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="funcionario">
+                                            <div class="foto">JS</div>
 
-                                <?php foreach ($pagamentos as $pagamento): ?>
+                                            <div class="dados-funcionario">
+                                                <strong>João da Silva</strong>
 
-                                    <tr>
-
-                                        <td>
-
-                                            <div class="funcionario">
-
-                                                <div class="foto">
-                                                    <?php echo iniciais($pagamento['nome']); ?>
-                                                </div>
-
-                                                <div class="dados-funcionario">
-
-                                                    <strong>
-                                                        <?php echo $pagamento['nome']; ?>
-                                                    </strong>
-
-                                                    <span>
-                                                        <?php echo $pagamento['cargo']; ?>
-                                                    </span>
-
-                                                </div>
-
+                                                <span>Mecânico</span>
                                             </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        R$2.500,00
+                                    </td>
 
-                                        </td>
+                                    <td>
+                                        05/09/2026
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="situacao pago">Pago</span>
+                                    </td>
 
+                                    <td>
+                                        <a href="#" class="botao-tres">:</a>
+                                    </td>
+                                </tr>
 
-                                        <td>
-                                            <?php echo dinheiro($pagamento['valor']); ?>
-                                        </td>
+                                <tr>
+                                    <td>
+                                        <div class="funcionario">
+                                            <div class="foto">JS</div>
 
+                                            <div class="dados-funcionario">
+                                                <strong>João da Silva</strong>
 
-                                        <td>
-                                            <?php echo dataBrasil($pagamento['data_pagamento']); ?>
-                                        </td>
+                                                <span>Mecânico</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        R$2.500,00
+                                    </td>
 
+                                    <td>
+                                        05/09/2026
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="situacao pendente">Pendente</span>
+                                    </td>
 
-                                        <td>
+                                    <td>
+                                        <a href="#" class="botao-tres">:</a>
+                                    </td>
+                                </tr>
 
-                                            <?php if ($pagamento['status'] == 'pago'): ?>
+                                <tr>
+                                    <td>
+                                        <div class="funcionario">
+                                            <div class="foto">JS</div>
 
-                                                <span class="situacao pago">
-                                                    Pago
-                                                </span>
+                                            <div class="dados-funcionario">
+                                                <strong>João da Silva</strong>
 
-                                            <?php elseif ($pagamento['status'] == 'pendente'): ?>
+                                                <span>Mecânico</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        R$2.500,00
+                                    </td>
 
-                                                <span class="situacao pendente">
-                                                    Pendente
-                                                </span>
+                                    <td>
+                                        05/09/2026
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="situacao pago">Pago</span>
+                                    </td>
 
-                                            <?php else: ?>
+                                    <td>
+                                        <a href="#" class="botao-tres">:</a>
+                                    </td>
+                                </tr>
 
-                                                <span class="situacao atrasado">
-                                                    Atrasado
-                                                </span>
+                                <tr>
+                                    <td>
+                                        <div class="funcionario">
+                                            <div class="foto">JS</div>
 
-                                            <?php endif; ?>
+                                            <div class="dados-funcionario">
+                                                <strong>João da Silva</strong>
 
-                                        </td>
+                                                <span>Mecânico</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        R$2.500,00
+                                    </td>
 
+                                    <td>
+                                        05/09/2026
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="situacao pendente">Pendente</span>
+                                    </td>
 
-                                        <td>
-                                            <a href="#" class="botao-tres">:</a>
-                                        </td>
-
-                                    </tr>
-
-                                <?php endforeach; ?>
-
+                                    <td>
+                                        <a href="#" class="botao-tres">:</a>
+                                    </td>
+                                </tr>
                             </tbody>
-
-                        </table>
-
+                        </table>                        
                     </div>
-
                 </article>
-
 
                 <article class="caixa alertas">
 
                     <div class="cabecalho-box">
-
-                        <h3>
-                            Próximos prazos e alertas
-                        </h3>
-
-                        <a href="#" class="botao-ver">
-                            Ver Todos
-                        </a>
-
+                        <h3>Próximos prazos e alertas</h3>
+                        <a href="#" class="botao-ver">Ver Todos</a>
                     </div>
-
 
                     <div class="bloco-atrasado">
-
                         <div class="titulo-alerta">
-
                             <div class="icone-alerta">
-
                                 <span>!</span>
-
-                                <strong>
-                                    Pagamento(s) atrasados
-                                </strong>
-
+                                <strong>Pagamento(s) atrasados</strong>
                             </div>
-
-                            <span class="quantidade">
-                                <?php echo count($atrasados); ?>
-                            </span>
-
+                            <span class="quantidade">1</span>
                         </div>
 
-
-                        <?php foreach ($atrasados as $atrasado): ?>
-
-                            <div class="item-alerta">
-
-                                <div>
-
-                                    <strong>
-                                        <?php echo $atrasado['nome']; ?>
-                                        -
-                                        <?php echo $atrasado['cargo']; ?>
-                                    </strong>
-
-                                    <span>
-                                        Vencimento:
-                                        <?php echo dataBrasil($atrasado['data_prazo']); ?>
-                                    </span>
-
-                                </div>
-
-                                <strong>
-                                    Atrasado há
-                                    <?php echo $atrasado['dias_atrasado']; ?>
-                                    dia(s)
-                                </strong>
-
+                        <div class="item-alerta">
+                            <div>
+                                <strong>Carlos Santos - Estoquista</strong>
+                                <span>Vencimento: 10/09/2026</span>
                             </div>
-
-                        <?php endforeach; ?>
-
+                            <strong>Atrasado há um dia</strong>
+                        </div>
                     </div>
-
 
                     <div class="bloco-proximo">
-
                         <div class="titulo-alerta">
-
                             <div class="icone-alerta">
-
                                 <span>!</span>
-
-                                <strong>
-                                    Próximos pagamentos
-                                </strong>
-
+                                <strong>Próximos pagamentos</strong>
                             </div>
-
-                            <span class="quantidade">
-                                <?php echo count($proximosPrazos); ?>
-                            </span>
-
+                            <span class="quantidade">3</span>
                         </div>
 
-
-                        <?php foreach ($proximosPrazos as $proximo): ?>
-
-                            <div class="item-alerta">
-
-                                <div>
-
-                                    <strong>
-                                        <?php echo $proximo['nome']; ?>
-                                        -
-                                        <?php echo $proximo['cargo']; ?>
-                                    </strong>
-
-                                    <span>
-                                        Vencimento:
-                                        <?php echo dataBrasil($proximo['data_prazo']); ?>
-                                    </span>
-
-                                </div>
-
-                                <strong>
-
-                                    <?php if ($proximo['dias'] == 0): ?>
-
-                                        Vence hoje
-
-                                    <?php elseif ($proximo['dias'] == 1): ?>
-
-                                        Vence em um dia
-
-                                    <?php else: ?>
-
-                                        Vence em
-                                        <?php echo $proximo['dias']; ?>
-                                        dias
-
-                                    <?php endif; ?>
-
-                                </strong>
-
+                        <div class="item-alerta">
+                            <div>
+                                <strong>Ana Paula - Atendente</strong>
+                                <span>Vencimento: 11/09/2026</span>
                             </div>
+                            <strong>Vence em um dia</strong>
+                        </div>
 
-                        <?php endforeach; ?>
+                        <div class="item-alerta">
+                            <div>
+                                <strong>Ricardo Mendes - Vendedor</strong>
+                                <span>Vencimento: 15/09/2026</span>
+                            </div>
+                            <strong>Vence em 6 dias</strong>
+                        </div>
 
+                        <div class="item-alerta">
+                            <div>
+                                <strong>João da Silva - Mecânico</strong>
+                                <span>Vencimento: 05/10/2026</span>
+                            </div>
+                            <strong>Vence em 26 dias</strong>
+                        </div>
                     </div>
-
                 </article>
-
             </section>
 
-
             <section class="box resumo-financeiro">
-
                 <div class="cabecalho-box">
-
-                    <h3>
-                        Resumo financeiro (Este mês)
-                    </h3>
-
+                    <h3>Resumo financeiro (Este mês)</h3>
                     <select class="seletor-mes">
-
-                        <option>
-                            Este mês
-                        </option>
-
-                        <option>
-                            Mês passado
-                        </option>
-
+                        <option>Este mês</option>
+                        <option>Mês passado</option>
                     </select>
-
                 </div>
-
 
                 <div class="resumo">
-
-
-                    <div
-                        class="grafico-redondo"
-                        style="
-                            background:
-                            conic-gradient(
-                                #e74c3c 0% <?php echo $porcentagemPago; ?>%,
-                                #f39c12 <?php echo $porcentagemPago; ?>% 100%
-                            );
-                        "
-                    >
-
+                    <div class="grafico-redondo">
                         <div class="valor-total">
-
-                            <strong>
-                                <?php echo dinheiro($totalGeral); ?>
-                            </strong>
-
-                            <span>
-                                Total geral
-                            </span>
-
+                            <strong>R$ 97.750,00</strong>
+                            <span>Total geral</span>
                         </div>
-
                     </div>
-
 
                     <div class="legenda">
-
                         <div class="item-legenda">
-
-                            <span class="bolinha vermelha">
-                                <i class="bi bi-dot"></i>
-                            </span>
-
+                            <span class="bolinha vermelha"><i class="bi bi-dot"></i></span>
                             <div>
-
-                                <span>
-                                    Pagamentos realizados
-                                </span>
-
-                                <strong>
-                                    <?php echo dinheiro($totalPago); ?>
-                                </strong>
-
-                                <small>
-                                    <?php echo number_format($porcentagemPago, 1, ',', '.'); ?>%
-                                </small>
-
+                                <span>Pagamentos realizados</span>
+                                <strong>R$ 82.450,00</strong>
+                                <small>84,3%</small>
                             </div>
-
                         </div>
-
-
-                        <div class="item-legenda">
-
-                            <span class="bolinha laranja">
-                                <i class="bi bi-dot"></i>
-                            </span>
-
-                            <div>
-
-                                <span>
-                                    Pagamentos pendentes
-                                </span>
-
-                                <strong>
-                                    <?php echo dinheiro($totalPendente); ?>
-                                </strong>
-
-                                <small>
-                                    <?php echo number_format($porcentagemPendente, 1, ',', '.'); ?>%
-                                </small>
-
-                            </div>
-
-                        </div>
-
                     </div>
 
+                    <div class="item-legenda">
+                        <span class="bolinha laranja"><i class="bi bi-dot"></i></span>
+                        <div>
+                            <span>Pagamentos pendentes</span>
+                            <strong>R$ 15.300,00</strong>
+                            <small>15,7%</small>
+                        </div>
+                    </div>
                 </div>
 
-
                 <div class="grafico-barras">
-
                     <div class="valores-grafico">
+<<<<<<< HEAD
 
                         <span>
                             <?= dinheiro($maiorValor) ?>
@@ -766,10 +554,17 @@ foreach ($semanasGrafico as $semana) {
                             R$ 0
                         </span>
 
+=======
+                        <span>R$ 40.000</span>
+                        <span>R$ 30.000</span>
+                        <span>R$ 20.000</span>
+                        <span>R$ 10.000</span>
+                        <span>R$ 0</span>
+>>>>>>> 4402300a28224e9b2f3c78d5724e958d7c7cdfd2
                     </div>
 
-
                     <div class="barras">
+<<<<<<< HEAD
 
                         <?php foreach ($semanasGrafico as $semana): ?>
 
@@ -803,16 +598,38 @@ foreach ($semanasGrafico as $semana) {
 
                         <?php endforeach; ?>
 
+=======
+                        <div class="barra-item">
+                            <div class="barra"></div>
+                            <span>01 a 07 <br> Set</span>
+                        </div>
+
+                        <div class="barra-item">
+                            <div class="barra"></div>
+                            <span>08 a 14 <br> Set</span>
+                        </div>
+
+                        <div class="barra-item">
+                            <div class="barra"></div>
+                            <span>15 a 21 <br> Set</span>
+                        </div>
+
+                        <div class="barra-item">
+                            <div class="barra"></div>
+                            <span>22 a 28 <br> Set</span>
+                        </div>
+
+                        <div class="barra-item">
+                            <div class="barra"></div>
+                            <span>29 a 05 <br> Set</span>
+                        </div>
+>>>>>>> 4402300a28224e9b2f3c78d5724e958d7c7cdfd2
                     </div>
-
                 </div>
-
             </section>
 
         </section>
 
     </main>
-
 </body>
-
 </html>

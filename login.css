@@ -202,3 +202,72 @@ body {
     font-size: 0.8rem;
 }
 
+/* Suporte para tela de Editar Senha */
+.caixa.caixa-edita {
+    height: auto;
+    min-height: 620px;
+    margin: 20px;
+}
+
+.caixa-edita .direita {
+    padding: 2.5rem 4rem;
+}
+
+.caixa-edita .formulario h2 {
+    font-size: 1.8rem;
+}
+
+.caixa-edita .subtitulo {
+    margin-bottom: 1.2rem;
+}
+
+.caixa-edita .grupo {
+    margin-bottom: 1rem;
+}
+
+.caixa-edita .campo input {
+    padding: 12px 40px 12px 40px;
+}
+
+.alerta-erro {
+    color: #ef4444;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 1.2rem;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alerta-sucesso {
+    color: #15803d;
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 1.2rem;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.link-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #666;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.link-voltar:hover {
+    color: #920b12;
+}
+
+
