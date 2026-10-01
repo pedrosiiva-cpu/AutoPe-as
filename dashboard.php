@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 <?php
 
 require_once "crud.php";
+require_once "conexao.php";
 
 $hoje = date('Y-m-d');
 $fim = date('Y-m-d', strtotime('+7 days'));
-
 
 $consulta = $pdo->query("
     SELECT
@@ -29,8 +28,6 @@ $consulta = $pdo->query("
 
 $pagos = $consulta->fetch(PDO::FETCH_ASSOC);
 
-
-
 $consulta = $pdo->query("
     SELECT COALESCE(SUM(valor), 0) AS total
     FROM pagamentos
@@ -40,7 +37,6 @@ $consulta = $pdo->query("
 
 $pendentes = $consulta->fetch(PDO::FETCH_ASSOC);
 
-
 $consulta = $pdo->query("
     SELECT COUNT(*) AS total
     FROM prazos_pagamentos
@@ -49,7 +45,6 @@ $consulta = $pdo->query("
 ");
 
 $proximos = $consulta->fetch(PDO::FETCH_ASSOC);
-
 
 $consulta = $pdo->query("
     SELECT
@@ -80,10 +75,10 @@ $consulta = $pdo->query("
     INNER JOIN funcionarios f
         ON f.id = pp.funcionario_id
     WHERE pp.status = 'atrasado'
-       OR (
-            pp.status = 'pendente'
-            AND pp.data_prazo < '$hoje'
-       )
+    OR (
+        pp.status = 'pendente'
+        AND pp.data_prazo < '$hoje'
+    )
     ORDER BY pp.data_prazo ASC
 ");
 
@@ -108,9 +103,27 @@ $consulta = $pdo->query("
 
 $proximosPrazos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
+$consulta = $pdo->query("
+    SELECT COUNT(*) AS total
+    FROM alertas
+    WHERE visualizado = FALSE
+");
+
+$notificacoes = $consulta->fetch(PDO::FETCH_ASSOC);
+
+$consulta = $pdo->query("
+    SELECT nome, perfil
+    FROM usuarios
+    WHERE ativo = TRUE
+    ORDER BY id ASC
+    LIMIT 1
+");
+
+$usuario = $consulta->fetch(PDO::FETCH_ASSOC);
+
 function dinheiro($valor)
 {
-    return 'R$ ' . number_format($valor, 2, ',', '.');
+    return 'R$ ' . number_format((float) $valor, 2, ',', '.');
 }
 
 function dataBrasil($data)
@@ -132,8 +145,56 @@ function iniciais($nome)
     );
 }
 
-$totalPago = $pagos['total'];
-$totalPendente = $pendentes['total'];
+function escapar($valor)
+{
+    return htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+}
+
+function textoStatus($status)
+{
+    if ($status === 'pago') {
+        return 'Pago';
+    }
+
+    if ($status === 'pendente') {
+        return 'Pendente';
+    }
+
+    if ($status === 'atrasado') {
+        return 'Atrasado';
+    }
+
+    return ucfirst($status);
+}
+
+function textoDias($dias)
+{
+    $dias = (int) $dias;
+
+    if ($dias <= 0) {
+        return 'Vence hoje';
+    }
+
+    if ($dias == 1) {
+        return 'Vence em um dia';
+    }
+
+    return 'Vence em ' . $dias . ' dias';
+}
+
+function textoAtraso($dias)
+{
+    $dias = (int) $dias;
+
+    if ($dias <= 1) {
+        return 'Atrasado há um dia';
+    }
+
+    return 'Atrasado há ' . $dias . ' dias';
+}
+
+$totalPago = (float) $pagos['total'];
+$totalPendente = (float) $pendentes['total'];
 
 $totalGeral = $totalPago + $totalPendente;
 
@@ -144,6 +205,8 @@ if ($totalGeral > 0) {
     $porcentagemPago = 0;
     $porcentagemPendente = 0;
 }
+
+$anguloPago = $porcentagemPago * 3.6;
 
 $semanasGrafico = [];
 
@@ -172,7 +235,7 @@ while ($dia <= $ultimoDia) {
 
     $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
-    $valor = $resultado['total'];
+    $valor = (float) $resultado['total'];
 
     $semanasGrafico[] = [
         'inicio' => $inicioSemana,
@@ -186,19 +249,18 @@ while ($dia <= $ultimoDia) {
 $maiorValor = 0;
 
 foreach ($semanasGrafico as $semana) {
-
     if ($semana['valor'] > $maiorValor) {
         $maiorValor = $semana['valor'];
     }
 }
 
+$quantidadeAtrasados = count($atrasados);
+$quantidadeProximos = count($proximosPrazos);
 
 ?>
 
-=======
->>>>>>> 4402300a28224e9b2f3c78d5724e958d7c7cdfd2
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -206,102 +268,231 @@ foreach ($semanasGrafico as $semana) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Dashboard</title>
 </head>
+
 <body>
+<div class="flex">
+    <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon"></div>
+                <div class="brand-name">AUTOPEÇAS</div>
+                <div class="brand-sub">GESTÃO DE PAGAMENTOS</div>
+            </div>
+            <nav class="nav-menu">
+                <a href="dashboard.php" class="nav-link active">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9.5 12 3l9 6.5" />
+                        <path d="M5 9.5V21h14V9.5" />
+                        <path d="M9 21v-6h6v6" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="funcionarios.php" class="nav-link">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M2 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1" />
+                        <path d="M16.5 3.2a4 4 0 0 1 0 7.6" />
+                        <path d="M22 21v-1a5 5 0 0 0-3.5-4.8" />
+                    </svg>
+                    Funcionários
+                </a>
+                <a href="pagamentos.php" class="nav-link">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2.5" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
+                    Pagamentos
+                </a>
+                </a>
+                <a href="relatorio.php" class="nav-link">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="6" y1="20" x2="6" y2="12" />
+                        <line x1="12" y1="20" x2="12" y2="5" />
+                        <line x1="18" y1="20" x2="18" y2="15" />
+                    </svg>
+                    Relatórios
+                </a>
+            </nav>
+            <div class="nav-footer">
+                <a href="#" class="nav-link logout">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Sair
+                </a>
+            </div>
+    </aside>
+
     <main class="conteudo">
+
         <header class="cabecalho">
+
             <div class="titulo">
-                <button class="botao-menu" type="button">
-                    ☰
-                </button>
 
                 <div>
                     <h2>Dashboard</h2>
                     <p>Visão geral do sistema</p>
                 </div>
+
             </div>
 
             <div class="usuario">
-                <button type="button" class="botao-notificacao">
-                    <i class="bi bi-bell-fill"></i>
-                    <span class="numero-notificacao">3</span>
-                </button>
+
                 <div class="dados-usuario">
+
                     <div class="icone-usuario">
                         <i class="bi bi-person-circle"></i>
                     </div>
 
                     <div>
-                        <strong>Gestor Financeiro</strong>
-                        <span>Administrador</span>
+                        <strong>
+                            <?= escapar($usuario['nome'] ?? 'Gestor Financeiro') ?>
+                        </strong>
+
+                        <span>
+                            <?= isset($usuario['perfil']) && $usuario['perfil'] === 'gestor_financeiro' ? 'Gestor Financeiro' : 'Gerente' ?>
+                        </span>
                     </div>
-                    <span class="seta"><i class="bi bi-arrow-down-short"></i></span>
+
+                    <span class="seta">
+                        <i class="bi bi-arrow-down-short"></i>
+                    </span>
+
                 </div>
+
             </div>
+
         </header>
 
         <section class="painel">
 
             <section class="cartoes">
+
                 <article class="card">
+
                     <div class="icone-card">
                         <i class="bi bi-people-fill"></i>
                     </div>
 
                     <div class="dados-card">
-                        <span class="titulo-card">Funcionários Cadastrados</span>
-                        <strong class="valor-card">48</strong>
+
+                        <span class="titulo-card">
+                            Funcionários Cadastrados
+                        </span>
+
+                        <strong class="valor-card">
+                            <?= (int) $funcionarios['total'] ?>
+                        </strong>
+
                         <div class="texto-card">
-                            Ativos: 45
-                            <span><i class="bi bi-dot"></i></span>
-                            Inativos: 3
+                            Ativos: <?= (int) $funcionarios['ativos'] ?>
+
+                            <span>
+                                <i class="bi bi-dot"></i>
+                            </span>
+
+                            Inativos: <?= (int) $funcionarios['inativos'] ?>
                         </div>
+
                     </div>
+
                 </article>
 
                 <article class="card">
-                    <div class="icone-card"><i class="bi bi-wallet2"></i></div>
+
+                    <div class="icone-card">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
 
                     <div class="dados-card">
-                        <span class="titulo-card">Pagamentos Realizados</span>
 
-                        <strong class="valor-card">R$ 82.450,00</strong>
+                        <span class="titulo-card">
+                            Pagamentos Realizados
+                        </span>
 
-                        <div class="texto-card">Este mês</div>
+                        <strong class="valor-card">
+                            <?= dinheiro($totalPago) ?>
+                        </strong>
+
+                        <div class="texto-card">
+                            Este mês
+                        </div>
+
                     </div>
+
                 </article>
 
                 <article class="card">
-                    <div class="icone-card"><i class="bi bi-clock-fill"></i></div>
+
+                    <div class="icone-card">
+                        <i class="bi bi-clock-fill"></i>
+                    </div>
 
                     <div class="dados-card">
-                        <span class="titulo-card">Pagamentos Pendentes</span>
-                        <strong class="valor-card">R$15.300,00</strong>
-                        <div class="texto-card">Este mês</div>
+
+                        <span class="titulo-card">
+                            Pagamentos Pendentes
+                        </span>
+
+                        <strong class="valor-card">
+                            <?= dinheiro($totalPendente) ?>
+                        </strong>
+
+                        <div class="texto-card">
+                            Este mês
+                        </div>
+
                     </div>
+
                 </article>
 
                 <article class="card">
-                    <div class="icone-card"><i class="bi bi-calendar3"></i></div>
+
+                    <div class="icone-card">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
 
                     <div class="dados-card">
-                        <span class="titulo-card">Próximos Pagamentos</span>
-                        <strong class="valor-card">07</strong>
-                        <div class="texto-card">Nos próximos 7 dias</div>
+
+                        <span class="titulo-card">
+                            Próximos Pagamentos
+                        </span>
+
+                        <strong class="valor-card">
+                            <?= str_pad((int) $proximos['total'], 2, '0', STR_PAD_LEFT) ?>
+                        </strong>
+
+                        <div class="texto-card">
+                            Nos próximos 7 dias
+                        </div>
+
                     </div>
+
                 </article>
+
             </section>
 
             <section class="parte-meio">
 
                 <article class="caixa pagamentos-recentes">
+
                     <div class="cabecalho-box">
                         <h3>Pagamentos Recentes</h3>
                         <a href="#" class="botao-ver">Ver Todos</a>
                     </div>
 
                     <div class="area-tabela">
+
                         <table class="tabela">
+
                             <thead>
+
                                 <tr>
                                     <th>Funcionários</th>
                                     <th>Valor</th>
@@ -309,230 +500,307 @@ foreach ($semanasGrafico as $semana) {
                                     <th>Status</th>
                                     <th></th>
                                 </tr>
+
                             </thead>
+
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="funcionario">
-                                            <div class="foto">JS</div>
 
-                                            <div class="dados-funcionario">
-                                                <strong>João da Silva</strong>
+                                <?php foreach ($pagamentos as $pagamento): ?>
 
-                                                <span>Mecânico</span>
+                                    <tr>
+
+                                        <td>
+
+                                            <div class="funcionario">
+
+                                                <div class="foto">
+                                                    <?= escapar(iniciais($pagamento['nome'])) ?>
+                                                </div>
+
+                                                <div class="dados-funcionario">
+
+                                                    <strong>
+                                                        <?= escapar($pagamento['nome']) ?>
+                                                    </strong>
+
+                                                    <span>
+                                                        <?= escapar($pagamento['cargo']) ?>
+                                                    </span>
+
+                                                </div>
+
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        R$2.500,00
-                                    </td>
 
-                                    <td>
-                                        05/09/2026
-                                    </td>
-                                    
-                                    <td>
-                                        <span class="situacao pago">Pago</span>
-                                    </td>
+                                        </td>
 
-                                    <td>
-                                        <a href="#" class="botao-tres">:</a>
-                                    </td>
-                                </tr>
+                                        <td>
+                                            <?= dinheiro($pagamento['valor']) ?>
+                                        </td>
 
-                                <tr>
-                                    <td>
-                                        <div class="funcionario">
-                                            <div class="foto">JS</div>
+                                        <td>
+                                            <?= dataBrasil($pagamento['data_pagamento']) ?>
+                                        </td>
 
-                                            <div class="dados-funcionario">
-                                                <strong>João da Silva</strong>
+                                        <td>
 
-                                                <span>Mecânico</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        R$2.500,00
-                                    </td>
+                                            <span class="situacao <?= escapar($pagamento['status']) ?>">
+                                                <?= textoStatus($pagamento['status']) ?>
+                                            </span>
 
-                                    <td>
-                                        05/09/2026
-                                    </td>
-                                    
-                                    <td>
-                                        <span class="situacao pendente">Pendente</span>
-                                    </td>
+                                        </td>
 
-                                    <td>
-                                        <a href="#" class="botao-tres">:</a>
-                                    </td>
-                                </tr>
+                                        <td>
+                                            <a href="#" class="botao-tres">:</a>
+                                        </td>
 
-                                <tr>
-                                    <td>
-                                        <div class="funcionario">
-                                            <div class="foto">JS</div>
+                                    </tr>
 
-                                            <div class="dados-funcionario">
-                                                <strong>João da Silva</strong>
+                                <?php endforeach; ?>
 
-                                                <span>Mecânico</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        R$2.500,00
-                                    </td>
+                                <?php if (count($pagamentos) === 0): ?>
 
-                                    <td>
-                                        05/09/2026
-                                    </td>
-                                    
-                                    <td>
-                                        <span class="situacao pago">Pago</span>
-                                    </td>
+                                    <tr>
 
-                                    <td>
-                                        <a href="#" class="botao-tres">:</a>
-                                    </td>
-                                </tr>
+                                        <td colspan="5">
+                                            Nenhum pagamento encontrado.
+                                        </td>
 
-                                <tr>
-                                    <td>
-                                        <div class="funcionario">
-                                            <div class="foto">JS</div>
+                                    </tr>
 
-                                            <div class="dados-funcionario">
-                                                <strong>João da Silva</strong>
+                                <?php endif; ?>
 
-                                                <span>Mecânico</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        R$2.500,00
-                                    </td>
-
-                                    <td>
-                                        05/09/2026
-                                    </td>
-                                    
-                                    <td>
-                                        <span class="situacao pendente">Pendente</span>
-                                    </td>
-
-                                    <td>
-                                        <a href="#" class="botao-tres">:</a>
-                                    </td>
-                                </tr>
                             </tbody>
-                        </table>                        
+
+                        </table>
+
                     </div>
+
                 </article>
 
                 <article class="caixa alertas">
 
                     <div class="cabecalho-box">
-                        <h3>Próximos prazos e alertas</h3>
-                        <a href="#" class="botao-ver">Ver Todos</a>
+
+                        <h3>
+                            Próximos prazos e alertas
+                        </h3>
+
+                        <a href="#" class="botao-ver">
+                            Ver Todos
+                        </a>
+
                     </div>
 
                     <div class="bloco-atrasado">
+
                         <div class="titulo-alerta">
+
                             <div class="icone-alerta">
                                 <span>!</span>
                                 <strong>Pagamento(s) atrasados</strong>
                             </div>
-                            <span class="quantidade">1</span>
+
+                            <span class="quantidade">
+                                <?= $quantidadeAtrasados ?>
+                            </span>
+
                         </div>
 
-                        <div class="item-alerta">
-                            <div>
-                                <strong>Carlos Santos - Estoquista</strong>
-                                <span>Vencimento: 10/09/2026</span>
+                        <?php foreach ($atrasados as $atrasado): ?>
+
+                            <div class="item-alerta">
+
+                                <div>
+
+                                    <strong>
+                                        <?= escapar($atrasado['nome']) ?> - <?= escapar($atrasado['cargo']) ?>
+                                    </strong>
+
+                                    <span>
+                                        Vencimento: <?= dataBrasil($atrasado['data_prazo']) ?>
+                                    </span>
+
+                                </div>
+
+                                <strong>
+                                    <?= textoAtraso($atrasado['dias_atrasado']) ?>
+                                </strong>
+
                             </div>
-                            <strong>Atrasado há um dia</strong>
-                        </div>
+
+                        <?php endforeach; ?>
+
+                        <?php if ($quantidadeAtrasados === 0): ?>
+
+                            <div class="item-alerta">
+
+                                <div>
+                                    <strong>
+                                        Nenhum pagamento atrasado
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                        <?php endif; ?>
+
                     </div>
 
                     <div class="bloco-proximo">
+
                         <div class="titulo-alerta">
+
                             <div class="icone-alerta">
                                 <span>!</span>
                                 <strong>Próximos pagamentos</strong>
                             </div>
-                            <span class="quantidade">3</span>
+
+                            <span class="quantidade">
+                                <?= $quantidadeProximos ?>
+                            </span>
+
                         </div>
 
-                        <div class="item-alerta">
-                            <div>
-                                <strong>Ana Paula - Atendente</strong>
-                                <span>Vencimento: 11/09/2026</span>
-                            </div>
-                            <strong>Vence em um dia</strong>
-                        </div>
+                        <?php foreach ($proximosPrazos as $prazo): ?>
 
-                        <div class="item-alerta">
-                            <div>
-                                <strong>Ricardo Mendes - Vendedor</strong>
-                                <span>Vencimento: 15/09/2026</span>
-                            </div>
-                            <strong>Vence em 6 dias</strong>
-                        </div>
+                            <div class="item-alerta">
 
-                        <div class="item-alerta">
-                            <div>
-                                <strong>João da Silva - Mecânico</strong>
-                                <span>Vencimento: 05/10/2026</span>
+                                <div>
+
+                                    <strong>
+                                        <?= escapar($prazo['nome']) ?> - <?= escapar($prazo['cargo']) ?>
+                                    </strong>
+
+                                    <span>
+                                        Vencimento: <?= dataBrasil($prazo['data_prazo']) ?>
+                                    </span>
+
+                                </div>
+
+                                <strong>
+                                    <?= textoDias($prazo['dias']) ?>
+                                </strong>
+
                             </div>
-                            <strong>Vence em 26 dias</strong>
-                        </div>
+
+                        <?php endforeach; ?>
+
+                        <?php if ($quantidadeProximos === 0): ?>
+
+                            <div class="item-alerta">
+
+                                <div>
+                                    <strong>
+                                        Nenhum pagamento próximo
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                        <?php endif; ?>
+
                     </div>
+
                 </article>
+
             </section>
 
             <section class="box resumo-financeiro">
+
                 <div class="cabecalho-box">
-                    <h3>Resumo financeiro (Este mês)</h3>
+
+                    <h3>
+                        Resumo financeiro (Este mês)
+                    </h3>
+
                     <select class="seletor-mes">
                         <option>Este mês</option>
                         <option>Mês passado</option>
                     </select>
+
                 </div>
 
                 <div class="resumo">
-                    <div class="grafico-redondo">
+
+                    <div
+                        class="grafico-redondo"
+                        style="background: conic-gradient(
+                            #b51e2b 0deg <?= $anguloPago ?>deg,
+                            #e6a16c <?= $anguloPago ?>deg 360deg
+                        );"
+                    >
+
                         <div class="valor-total">
-                            <strong>R$ 97.750,00</strong>
-                            <span>Total geral</span>
+
+                            <strong>
+                                <?= dinheiro($totalGeral) ?>
+                            </strong>
+
+                            <span>
+                                Total geral
+                            </span>
+
                         </div>
+
                     </div>
 
                     <div class="legenda">
+
                         <div class="item-legenda">
-                            <span class="bolinha vermelha"><i class="bi bi-dot"></i></span>
+
+                            <span class="bolinha vermelha">
+                                <i class="bi bi-dot"></i>
+                            </span>
+
                             <div>
-                                <span>Pagamentos realizados</span>
-                                <strong>R$ 82.450,00</strong>
-                                <small>84,3%</small>
+
+                                <span>
+                                    Pagamentos realizados
+                                </span>
+
+                                <strong>
+                                    <?= dinheiro($totalPago) ?>
+                                </strong>
+
+                                <small>
+                                    <?= number_format($porcentagemPago, 1, ',', '.') ?>%
+                                </small>
+
                             </div>
+
                         </div>
+
                     </div>
 
                     <div class="item-legenda">
-                        <span class="bolinha laranja"><i class="bi bi-dot"></i></span>
+
+                        <span class="bolinha laranja">
+                            <i class="bi bi-dot"></i>
+                        </span>
+
                         <div>
-                            <span>Pagamentos pendentes</span>
-                            <strong>R$ 15.300,00</strong>
-                            <small>15,7%</small>
+
+                            <span>
+                                Pagamentos pendentes
+                            </span>
+
+                            <strong>
+                                <?= dinheiro($totalPendente) ?>
+                            </strong>
+
+                            <small>
+                                <?= number_format($porcentagemPendente, 1, ',', '.') ?>%
+                            </small>
+
                         </div>
+
                     </div>
+
                 </div>
 
                 <div class="grafico-barras">
+
                     <div class="valores-grafico">
-<<<<<<< HEAD
 
                         <span>
                             <?= dinheiro($maiorValor) ?>
@@ -554,17 +822,9 @@ foreach ($semanasGrafico as $semana) {
                             R$ 0
                         </span>
 
-=======
-                        <span>R$ 40.000</span>
-                        <span>R$ 30.000</span>
-                        <span>R$ 20.000</span>
-                        <span>R$ 10.000</span>
-                        <span>R$ 0</span>
->>>>>>> 4402300a28224e9b2f3c78d5724e958d7c7cdfd2
                     </div>
 
                     <div class="barras">
-<<<<<<< HEAD
 
                         <?php foreach ($semanasGrafico as $semana): ?>
 
@@ -572,6 +832,10 @@ foreach ($semanasGrafico as $semana) {
 
                             if ($maiorValor > 0) {
                                 $altura = ($semana['valor'] / $maiorValor) * 100;
+
+                                if ($altura < 2 && $semana['valor'] > 0) {
+                                    $altura = 2;
+                                }
                             } else {
                                 $altura = 0;
                             }
@@ -587,49 +851,33 @@ foreach ($semanasGrafico as $semana) {
                                 ></div>
 
                                 <span>
+
                                     <?= str_pad($semana['inicio'], 2, '0', STR_PAD_LEFT) ?>
+
                                     a
+
                                     <?= str_pad($semana['fim'], 2, '0', STR_PAD_LEFT) ?>
+
                                     <br>
+
                                     <?= date('M', strtotime($inicioMes)) ?>
+
                                 </span>
 
                             </div>
 
                         <?php endforeach; ?>
 
-=======
-                        <div class="barra-item">
-                            <div class="barra"></div>
-                            <span>01 a 07 <br> Set</span>
-                        </div>
-
-                        <div class="barra-item">
-                            <div class="barra"></div>
-                            <span>08 a 14 <br> Set</span>
-                        </div>
-
-                        <div class="barra-item">
-                            <div class="barra"></div>
-                            <span>15 a 21 <br> Set</span>
-                        </div>
-
-                        <div class="barra-item">
-                            <div class="barra"></div>
-                            <span>22 a 28 <br> Set</span>
-                        </div>
-
-                        <div class="barra-item">
-                            <div class="barra"></div>
-                            <span>29 a 05 <br> Set</span>
-                        </div>
->>>>>>> 4402300a28224e9b2f3c78d5724e958d7c7cdfd2
                     </div>
+
                 </div>
+
             </section>
 
         </section>
 
     </main>
+</div>
+    
 </body>
 </html>

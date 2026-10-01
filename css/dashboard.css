@@ -1,3 +1,23 @@
+:root{
+    --sidebar-bg:#000000;
+    --sidebarhover:rgba(255, 255, 255, .06);
+    --accent: #990100;
+    --accent-dark: #eb5e28;
+    --bg: #f6f6f6;
+    --card: #ffffff;
+    --border: #e6e7eb;
+    --text: #1a1b1e;
+    --text-muted: #6c6f76;
+    --text-faint: #98999f;
+    --green-bg: #e2f7ea;
+    --green-text: #189254;
+    --orange-bg: #fdf0dc;
+    --orange-text: #d98a1f;
+    --red-bg: #fde5e8;
+    --red-text: #d63447;
+    --radius: 10px;
+    }
+
 * {
     margin: 0;
     padding: 0;
@@ -8,6 +28,71 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #f5f6f8;
     color: #252525;
+}
+
+.flex{
+    display: flex;
+}
+
+.sidebar {
+    width: 252px;
+    flex-shrink: 0;
+    background: var(--sidebar-bg);
+    color: #c7c8cf;
+    display: flex;
+    flex-direction: column;
+    }
+    
+    .brand {
+    padding: 30px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
+    }
+    
+    .brand-icon {
+    width: 54px; height: 54px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;align-items: center;justify-content: center;
+    color: var(--accent);
+    }
+    
+.brand-icon svg{width: 28px; height: 28px;}
+.brand-name{color: #fff; font-size: 18px; font-weight: 800; letter-spacing: .4px;}
+.brand.sub{font-size: 10px; letter-spacing: 1.4px; color: #84858c; text-align: center;}
+    
+.nav-menu {
+    flex: 1;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;}
+
+.nav-link{
+     display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-radius: 8px;
+    font-size: 14px;font-weight: 500;color: #a9aab2;
+    transition:background .15s ease, color .15s ease;
+}
+
+.brand-sub{font-size: 10px; letter-spacing: 1.4px; color: #84858c; text-align: center;}
+    
+.nav-link:hover{background: var(--sidebar-hover); color: #fff;}
+.nav-link.active{background: var(--accent); color: #fff;}
+    
+.nav-footer{padding: 14px 12px 20px; border-top: 1px solid rgba(255, 255, 255, .07);}
+.nav-link.logout{color:var(--accent)}
+.nav-link.logout:hover{background: rgba(153, 1, 0, .15); color: var(--accent);}
+
+a{color: inherit; text-decoration: none;}
+
+.icon{
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
 }
 
 .conteudo {
