@@ -528,6 +528,35 @@ body {
     flex-shrink: 0;
 }
 
+.acoes-relatorio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: -0.75rem 0 1rem;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+}
+
+.acoes-relatorio .botao {
+    text-decoration: none;
+}
+
+.tabela-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabela-scroll table {
+    min-width: 520px;
+}
+
+.caixa-tabela td[colspan] {
+    padding: 22px 8px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
 .grafico-mensal {
     width: 100%;
     height: 250px;
@@ -767,5 +796,71 @@ td {
     .tabelas,
     .tables-section {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .conteudo,
+    .main-content {
+        padding: 1rem;
+    }
+
+    .filtros,
+    .filters-section {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .acoes-filtro,
+    .filter-actions {
+        grid-column: 1 / -1;
+        flex-wrap: wrap;
+    }
+
+    .acoes-relatorio {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .area-rosca,
+    .canvas-wrapper.donut-wrapper {
+        height: auto;
+        min-height: 240px;
+        gap: 18px;
+    }
+
+    .donut-chart-box {
+        width: 150px;
+        height: 150px;
+    }
+
+    .rosca-grafico {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filtros,
+    .filters-section,
+    .resumos,
+    .kpi-section {
+        grid-template-columns: 1fr;
+    }
+
+    .acoes-filtro,
+    .filter-actions {
+        flex-direction: column;
+    }
+
+    .acoes-filtro .botao,
+    .filter-actions .btn {
+        width: 100%;
+    }
+
+    .area-rosca,
+    .canvas-wrapper.donut-wrapper {
+        flex-direction: column;
+        padding: 12px 0;
     }
 }
