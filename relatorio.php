@@ -4,6 +4,11 @@ require_once __DIR__ . '/auth.php';
 exigirLogin();
 require_once __DIR__ . '/init.php';
 
+
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 function escaparRelatorio($valor): string
 {
     return htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
@@ -17,14 +22,18 @@ function dataValida(string $data): bool
 
 $hoje = new DateTimeImmutable('today');
 $inicioPadrao = $hoje->modify('first day of this month')->modify('-5 months');
-$inicio = trim((string) ($_GET['data_inicio'] ?? $inicioPadrao->format('Y-m-d')));
-$fim = trim((string) ($_GET['data_fim'] ?? $hoje->format('Y-m-d')));
+$inicioRecebido = $_GET['data_inicio'] ?? $inicioPadrao->format('Y-m-d');
+$fimRecebido = $_GET['data_fim'] ?? $hoje->format('Y-m-d');
+$inicio = is_string($inicioRecebido) ? trim($inicioRecebido) : $inicioPadrao->format('Y-m-d');
+$fim = is_string($fimRecebido) ? trim($fimRecebido) : $hoje->format('Y-m-d');
 if (!dataValida($inicio)) $inicio = $inicioPadrao->format('Y-m-d');
 if (!dataValida($fim)) $fim = $hoje->format('Y-m-d');
 if ($inicio > $fim) [$inicio, $fim] = [$fim, $inicio];
 
-$funcionarioId = filter_var($_GET['funcionario_id'] ?? '', FILTER_VALIDATE_INT);
-$situacao = (string) ($_GET['situacao'] ?? 'todos');
+$funcionarioRecebido = $_GET['funcionario_id'] ?? '';
+$funcionarioId = is_scalar($funcionarioRecebido) ? filter_var((string) $funcionarioRecebido, FILTER_VALIDATE_INT) : false;
+$situacaoRecebida = $_GET['situacao'] ?? 'todos';
+$situacao = is_string($situacaoRecebida) ? $situacaoRecebida : 'todos';
 if (!in_array($situacao, ['todos', 'pago', 'pendente'], true)) $situacao = 'todos';
 $verTodos = ($_GET['ver_todos'] ?? '') === '1';
 $exportar = ($_GET['exportar'] ?? '') === 'csv';
@@ -34,8 +43,11 @@ $idsFuncionarios = array_map('intval', array_column($listaFuncionarios, 'id'));
 if ($funcionarioId === false || !in_array((int) $funcionarioId, $idsFuncionarios, true)) $funcionarioId = null;
 else $funcionarioId = (int) $funcionarioId;
 
-$condicoes = ['p.data_pagamento BETWEEN :data_inicio AND :data_fim'];
-$parametros = ['data_inicio' => $inicio, 'data_fim' => $fim];
+$condicoes = ['p.data_pagamento >= :data_inicio', 'p.data_pagamento < :data_fim_exclusivo'];
+$parametros = [
+    'data_inicio' => $inicio . ' 00:00:00',
+    'data_fim_exclusivo' => (new DateTimeImmutable($fim))->modify('+1 day')->format('Y-m-d') . ' 00:00:00',
+];
 if ($funcionarioId !== null) {
     $condicoes[] = 'p.funcionario_id = :funcionario_id';
     $parametros['funcionario_id'] = $funcionarioId;
