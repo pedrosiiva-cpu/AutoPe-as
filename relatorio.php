@@ -137,24 +137,15 @@ $urlExportar = 'relatorio.php?' . http_build_query($queryFiltros + ['exportar' =
     <title>AutoPeças - Relatórios</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="relatorio.css">
+    <link rel="stylesheet" href="css/relatorio.css">
+    <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
 <div class="painel dashboard-container">
-    <aside class="menu-lateral sidebar">
-        <div class="menu-topo sidebar-header"><a href="dashboard.php" class="link-logo"><img src="./imagens/remove.png" alt="AutoPeças" class="logo logo-img"></a></div>
-        <nav class="navegacao sidebar-nav">
-            <a href="dashboard.php" class="link nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
-            <a href="funcionarios.php" class="link nav-link"><i class="fa-solid fa-users"></i> Funcionários</a>
-            <a href="relatorio.php" class="link nav-link"><i class="fa-solid fa-dollar-sign"></i> Pagamentos</a>
-            <a href="dashboard.php" class="link nav-link"><i class="fa-regular fa-bell"></i> Prazos e alertas</a>
-            <a href="relatorio.php" class="link nav-link ativo active"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
-        </nav>
-        <div class="menu-rodape sidebar-footer"><a href="logout.php" class="link nav-link texto-vermelho text-red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a></div>
-    </aside>
+    <?php require __DIR__ . '/sidebar.php'; ?>
     <main class="conteudo main-content">
         <header class="cabecalho topbar">
-            <div class="cabecalho-esq topbar-left"><button class="btn-menu menu-btn" type="button" aria-label="Menu"><i class="fa-solid fa-bars"></i></button><div><h1>Relatórios</h1><p class="subtitulo subtitle">Análises financeiras por período e funcionário.</p></div></div>
+            <div class="cabecalho-esq topbar-left"><button class="btn-menu menu-btn app-sidebar-toggle" type="button" aria-label="Abrir menu"><i class="fa-solid fa-bars"></i></button><div><h1>Relatórios</h1><p class="subtitulo subtitle">Análises financeiras por período e funcionário.</p></div></div>
         </header>
         <form method="get" action="relatorio.php" class="filtros filters-section">
             <div class="grupo-filtro filter-group"><label for="data_inicio">Data inicial</label><input type="date" id="data_inicio" name="data_inicio" value="<?= escaparRelatorio($inicio) ?>" required></div>

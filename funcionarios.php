@@ -78,83 +78,25 @@ $cargosDisponiveis = ['Todos', 'Mecânico', 'Financeiro', 'Estoquista', 'Atenden
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/funcionarios.css">
+    <link rel="stylesheet" href="css/sidebar.css">
     <title>Funcionarios | AutoPeças</title>
 </head>
 
 <body>
     <div class="app">
-        <aside class="sidebar">
-            <div class="brand">
-                <div class="img-logo">
-                    <img src="imagens/remove.png" alt="">
-                </div>
-                <div class="brand-name">AUTOPEÇAS</div>
-                <div class="brand-sub">GESTÃO DE PAGAMENTOS</div>
-            </div>
-            <nav class="nav-menu">
-                <a href="dashboard.php" class="nav-link">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 9.5 12 3l9 6.5" />
-                        <path d="M5 9.5V21h14V9.5" />
-                        <path d="M9 21v-6h6v6" />
-                    </svg>
-                    Dashboard
-                </a>
-                <a href="funcionarios.php" class="nav-link active">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M2 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1" />
-                        <path d="M16.5 3.2a4 4 0 0 1 0 7.6" />
-                        <path d="M22 21v-1a5 5 0 0 0-3.5-4.8" />
-                    </svg>
-                    Funcionários
-                </a>
-                <a href="relatorio.php" class="nav-link">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="5" width="20" height="14" rx="2.5" />
-                        <line x1="2" y1="10" x2="22" y2="10" />
-                    </svg>
-                    Pagamentos
-                </a>
-                
-                </a>
-                <a href="relatorio.php" class="nav-link">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="6" y1="20" x2="6" y2="12" />
-                        <line x1="12" y1="20" x2="12" y2="5" />
-                        <line x1="18" y1="20" x2="18" y2="15" />
-                    </svg>
-                    Relatórios
-                </a>
-              
-            </nav>
-            <div class="nav-footer">
-                <a href="logout.php" class="nav-link logout">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                        <polyline points="16 17 21 12 16 7" />
-                        <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                    Sair
-                </a>
-            </div>
-        </aside>
+       <div class="painel dashboard-container">
+    <?php require __DIR__ . '/sidebar.php'; ?>
 
         <div class="main">
             <header class="topbar">
-                <label for="sidebar-toggle" class="menu-btn" aria-label="Abrir menu">
+                <button type="button" class="menu-btn app-sidebar-toggle" aria-label="Abrir menu">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <line x1="3" y1="6" x2="21" y2="6" />
                         <line x1="3" y1="12" x2="21" y2="12" />
                         <line x1="3" y1="18" x2="21" y2="18" />
                     </svg>
-                </label>
+                </button>
                 <div class="page-title">
                     <h1>Funcionários</h1>
 
