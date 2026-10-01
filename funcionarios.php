@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 session_start();
+require_once 'auth.php';
+exigirLogin();
 
 require 'init.php';
 require 'crud.php';
 require 'funcoes.php';
-require_once 'conexao.php';
 
 $busca = trim((string) ($_GET['busca'] ?? ''));
 $situacao = (string) ($_GET['situacao'] ?? 'Todos');
@@ -91,7 +92,7 @@ $cargosDisponiveis = ['Todos', 'Mecânico', 'Financeiro', 'Estoquista', 'Atenden
                 <div class="brand-sub">GESTÃO DE PAGAMENTOS</div>
             </div>
             <nav class="nav-menu">
-                <a href="#" class="nav-link">
+                <a href="dashboard.php" class="nav-link">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 9.5 12 3l9 6.5" />
@@ -110,7 +111,7 @@ $cargosDisponiveis = ['Todos', 'Mecânico', 'Financeiro', 'Estoquista', 'Atenden
                     </svg>
                     Funcionários
                 </a>
-                <a href="#" class="nav-link">
+                <a href="relatorio.php" class="nav-link">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="5" width="20" height="14" rx="2.5" />
@@ -118,15 +119,9 @@ $cargosDisponiveis = ['Todos', 'Mecânico', 'Financeiro', 'Estoquista', 'Atenden
                     </svg>
                     Pagamentos
                 </a>
-                <a href="#" class="nav-link">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 8a6 6 0 0 1 12 0c0 4.2 1.4 5.6 2 6.2H4C4.6 13.6 6 12.2 6 8z" />
-                        <path d="M10.3 20a1.9 1.9 0 0 0 3.4 0" />
-                    </svg>
-                    Prazos e Alertas
+                
                 </a>
-                <a href="#" class="nav-link">
+                <a href="relatorio.php" class="nav-link">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <line x1="6" y1="20" x2="6" y2="12" />
@@ -135,18 +130,10 @@ $cargosDisponiveis = ['Todos', 'Mecânico', 'Financeiro', 'Estoquista', 'Atenden
                     </svg>
                     Relatórios
                 </a>
-                <a href="#" class="nav-link">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3" />
-                        <path
-                            d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4.1 0v-.2a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.9-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4.1h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4.1 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.6 1H21a2 2 0 1 1 0 4.1h-.1a1.7 1.7 0 0 0-1.5 1z" />
-                    </svg>
-                    Configurações
-                </a>
+              
             </nav>
             <div class="nav-footer">
-                <a href="#" class="nav-link logout">
+                <a href="logout.php" class="nav-link logout">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

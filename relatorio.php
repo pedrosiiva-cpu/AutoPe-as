@@ -1,30 +1,60 @@
 <?php
-$totalPago = 82450.00;
-$totalPendente = 15300.00;
-$totalFuncionarios = 48;
-$mediaSalarial = 2280.56;
-$labelsMeses = ["Mai/2026", "Jun/2026", "Jul/2026", "Ago/2026", "Set/2026"];
-$valoresPago = [24000, 26500, 31000, 33000, 25000];
-$valoresPendente = [7000, 6000, 7500, 6800, 4500];
+require_once __DIR__ . '/auth.php';
+exigirLogin();
+require_once __DIR__ . '/init.php';
+$listaFuncionarios = $pdo->query('SELECT id, nome FROM funcionarios ORDER BY nome')->fetchAll();
+$funcionarioId = filter_input(INPUT_GET, 'funcionario_id', FILTER_VALIDATE_INT) ?: null;
+if ($funcionarioId !== null && !in_array($funcionarioId, array_column($listaFuncionarios, 'id'), false)) {
+    $funcionarioId = null;
+}
+$wherePagamento = $funcionarioId !== null ? ' AND p.funcionario_id = :funcionario_id' : '';
+$parametros = $funcionarioId !== null ? ['funcionario_id' => $funcionarioId] : [];
+$sqlResumoFuncionarios = 'SELECT COUNT(*) total, COALESCE(AVG(salario_base), 0) media FROM funcionarios';
+if ($funcionarioId !== null) {
+    $sqlResumoFuncionarios .= ' WHERE id = :funcionario_id';
+}
+$stmtFuncionarios = $pdo->prepare($sqlResumoFuncionarios);
+$stmtFuncionarios->execute($parametros);
+$resumoFuncionarios = $stmtFuncionarios->fetch();
+$totalFuncionarios = (int) $resumoFuncionarios['total'];
+$mediaSalarial = (float) $resumoFuncionarios['media'];
+$labelsMeses = $valoresPago = $valoresPendente = [];
+$stmtMeses = $pdo->prepare("SELECT DATE_FORMAT(p.data_pagamento, '%m/%Y') mes, SUM(CASE WHEN p.status = 'pago' THEN p.valor ELSE 0 END) pago, SUM(CASE WHEN p.status = 'pendente' THEN p.valor ELSE 0 END) pendente FROM pagamentos p WHERE p.data_pagamento >= DATE_SUB(CURDATE(), INTERVAL 5 MONTH){$wherePagamento} GROUP BY YEAR(p.data_pagamento), MONTH(p.data_pagamento) ORDER BY YEAR(p.data_pagamento), MONTH(p.data_pagamento)");
+$stmtMeses->execute($parametros);
+foreach ($stmtMeses->fetchAll() as $mes) { $labelsMeses[] = $mes['mes']; $valoresPago[] = (float) $mes['pago']; $valoresPendente[] = (float) $mes['pendente']; }
+$stmtTotais = $pdo->prepare("SELECT COALESCE(SUM(CASE WHEN p.status = 'pago' THEN p.valor ELSE 0 END), 0) pago, COALESCE(SUM(CASE WHEN p.status = 'pendente' THEN p.valor ELSE 0 END), 0) pendente FROM pagamentos p WHERE 1=1{$wherePagamento}");
+$stmtTotais->execute($parametros);
+$totais = $stmtTotais->fetch();
+$totalPago = (float) $totais['pago'];
+$totalPendente = (float) $totais['pendente'];
 $somaTotal = $totalPago + $totalPendente;
 $percPago = $somaTotal > 0 ? number_format(($totalPago / $somaTotal) * 100, 1, ',', '') : '0,0';
 $percPendente = $somaTotal > 0 ? number_format(($totalPendente / $somaTotal) * 100, 1, ',', '') : '0,0';
 
-$maioresPagamentos = [
-    ["nome" => "Maria Oliveira", "cargo" => "Financeiro", "valor" => 2800.00, "data" => "2026-09-05"],
-    ["nome" => "João da Silva", "cargo" => "Mecânico", "valor" => 2500.00, "data" => "2026-09-05"],
-    ["nome" => "Lucas Ferreira", "cargo" => "Mecânico", "valor" => 2600.00, "data" => "2026-09-25"],
-    ["nome" => "Ricardo Mendes", "cargo" => "Vendedor", "valor" => 2400.00, "data" => "2026-09-15"],
-    ["nome" => "Carlos Santos", "cargo" => "Estoquista", "valor" => 2300.00, "data" => "2026-09-10"],
-];
-
-$pendentes = [
-    ["nome" => "Carlos Santos", "cargo" => "Estoquista", "valor" => 2300.00, "data_prevista" => "2026-09-10", "dias_atraso" => 5],
-    ["nome" => "Ana Paula", "cargo" => "Atendente", "valor" => 2000.00, "data_prevista" => "2026-09-10", "dias_atraso" => 5],
-    ["nome" => "Fernanda Lima", "cargo" => "Aux. Administrativo", "valor" => 2100.00, "data_prevista" => "2026-09-20", "dias_atraso" => 0],
-    ["nome" => "Lucas Ferreira", "cargo" => "Mecânico", "valor" => 2600.00, "data_prevista" => "2026-09-25", "dias_atraso" => 0],
-    ["nome" => "Patricia Souza", "cargo" => "Consult. de Peças", "valor" => 2200.00, "data_prevista" => "2026-09-30", "dias_atraso" => 0],
-];
+$stmtMaiores = $pdo->prepare("SELECT f.nome, f.cargo, p.valor, p.data_pagamento AS data FROM pagamentos p JOIN funcionarios f ON f.id = p.funcionario_id WHERE p.status = 'pago'{$wherePagamento} ORDER BY p.valor DESC LIMIT 5");
+$stmtMaiores->execute($parametros);
+$maioresPagamentos = $stmtMaiores->fetchAll();
+$stmtPendentes = $pdo->prepare("SELECT f.nome, f.cargo, p.valor, p.data_pagamento AS data_prevista, GREATEST(DATEDIFF(CURDATE(), p.data_pagamento), 0) dias_atraso FROM pagamentos p JOIN funcionarios f ON f.id = p.funcionario_id WHERE p.status = 'pendente'{$wherePagamento} ORDER BY p.data_pagamento ASC LIMIT 5");
+$stmtPendentes->execute($parametros);
+$pendentes = $stmtPendentes->fetchAll();
+$exportar = ($_GET['exportar'] ?? '') === 'csv';
+if ($exportar) {
+    $stmtExportacao = $pdo->prepare("SELECT f.nome, f.cargo, p.valor, p.status, p.data_pagamento FROM pagamentos p JOIN funcionarios f ON f.id = p.funcionario_id WHERE 1=1{$wherePagamento} ORDER BY p.data_pagamento DESC");
+    $stmtExportacao->execute($parametros);
+    header('Content-Type: text/csv; charset=UTF-8');
+    header('Content-Disposition: attachment; filename=relatorio-pagamentos.csv');
+    $saida = fopen('php://output', 'w');
+    fwrite($saida, "\xEF\xBB\xBF");
+    fputcsv($saida, ['Funcionário', 'Cargo', 'Valor', 'Status', 'Data'], ';');
+    foreach ($stmtExportacao->fetchAll() as $linha) {
+        fputcsv($saida, [$linha['nome'], $linha['cargo'], number_format((float) $linha['valor'], 2, ',', '.'), $linha['status'], $linha['data_pagamento']], ';');
+    }
+    fclose($saida);
+    exit;
+}
+$maiorValorGrafico = max(array_merge([1.0], $valoresPago, $valoresPendente));
+$percentualPagoGrafico = $somaTotal > 0 ? ($totalPago / $somaTotal) * 100 : 0;
+$percentualPendenteGrafico = $somaTotal > 0 ? 100 - $percentualPagoGrafico : 0;
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -35,7 +65,6 @@ $pendentes = [
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="relatorio.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="painel dashboard-container">
@@ -46,15 +75,15 @@ $pendentes = [
                 </a>
             </div>
             <nav class="navegacao sidebar-nav">
-                <a href="funcionarios.html" class="link nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
-                <a href="#" class="link nav-link"><i class="fa-solid fa-users"></i> Funcionários</a>
-                <a href="#" class="link nav-link"><i class="fa-solid fa-dollar-sign"></i> Pagamentos</a>
-                <a href="#" class="link nav-link"><i class="fa-regular fa-bell"></i> Prazos e Alertas</a>
+                <a href="dashboard.php" class="link nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="funcionarios.php" class="link nav-link"><i class="fa-solid fa-users"></i> Funcionários</a>
+                <a href="relatorio.php" class="link nav-link"><i class="fa-solid fa-dollar-sign"></i> Pagamentos</a>
+                <a href="dashboard.php" class="link nav-link"><i class="fa-regular fa-bell"></i> Prazos e Alertas</a>
                 <a href="#" class="link nav-link ativo active"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
                 <a href="#" class="link nav-link"><i class="fa-solid fa-gear"></i> Configurações</a>
             </nav>
             <div class="menu-rodape sidebar-footer">
-                <a href="#" class="link nav-link texto-vermelho text-red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+                <a href="logout.php" class="link nav-link texto-vermelho text-red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
             </div>
         </aside>
 
@@ -83,7 +112,7 @@ $pendentes = [
                 </div>
             </header>
 
-            <section class="filtros filters-section">
+            <form method="get" action="relatorio.php" class="filtros filters-section">
                 <div class="grupo-filtro filter-group">
                     <label>Tipo de relatório</label>
                     <select>
@@ -99,15 +128,18 @@ $pendentes = [
                 </div>
                 <div class="grupo-filtro filter-group">
                     <label>Funcionário</label>
-                    <select>
-                        <option>Todos</option>
+                    <select id="funcionario_id" name="funcionario_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($listaFuncionarios as $funcionario): ?>
+                            <option value="<?= (int) $funcionario['id'] ?>" <?= $funcionarioId === (int) $funcionario['id'] ? 'selected' : '' ?>><?= htmlspecialchars($funcionario['nome'], ENT_QUOTES, 'UTF-8') ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="acoes-filtro filter-actions">
-                    <button class="botao botao-vazio btn btn-outline"><i class="fa-solid fa-rotate-right"></i> LIMPAR FILTROS</button>
-                    <button class="botao botao-cheio btn btn-solid"><i class="fa-solid fa-download"></i> GERAR RELATÓRIO</button>
+                    <a href="relatorio.php" class="botao botao-vazio btn btn-outline"><i class="fa-solid fa-rotate-right"></i> LIMPAR FILTROS</a>
+                    <button type="submit" name="exportar" value="csv" class="botao botao-cheio btn btn-solid"><i class="fa-solid fa-download"></i> GERAR RELATÓRIO</button>
                 </div>
-            </section>
+            </form>
 
             <section class="resumos kpi-section">
                 <div class="cartao kpi-card">
@@ -147,15 +179,31 @@ $pendentes = [
             <section class="graficos charts-section">
                 <div class="caixa-grafico chart-container">
                     <h3>Pagamentos por mês</h3>
-                    <div class="canvas-wrapper" style="height: 250px;">
-                        <canvas id="barChart"></canvas>
+                    <div class="grafico-mensal" role="img" aria-label="Gráfico de pagamentos pagos e pendentes por mês">
+                        <?php if ($labelsMeses): ?>
+                            <svg viewBox="0 0 720 250" preserveAspectRatio="none" aria-hidden="true">
+                                <line x1="35" y1="205" x2="710" y2="205" stroke="#e5e7eb" />
+                                <?php $larguraGrupo = 660 / count($labelsMeses); foreach ($labelsMeses as $indice => $mes):
+                                    $alturaPago = ($valoresPago[$indice] / $maiorValorGrafico) * 165;
+                                    $alturaPendente = ($valoresPendente[$indice] / $maiorValorGrafico) * 165;
+                                    $xGrupo = 45 + ($indice * $larguraGrupo);
+                                ?>
+                                    <rect x="<?= $xGrupo ?>" y="<?= 205 - $alturaPago ?>" width="<?= max(8, $larguraGrupo * 0.28) ?>" height="<?= $alturaPago ?>" rx="3" fill="#22c55e"><title>Pago: R$ <?= number_format($valoresPago[$indice], 2, ',', '.') ?></title></rect>
+                                    <rect x="<?= $xGrupo + $larguraGrupo * 0.34 ?>" y="<?= 205 - $alturaPendente ?>" width="<?= max(8, $larguraGrupo * 0.28) ?>" height="<?= $alturaPendente ?>" rx="3" fill="#f97316"><title>Pendente: R$ <?= number_format($valoresPendente[$indice], 2, ',', '.') ?></title></rect>
+                                    <text x="<?= $xGrupo + $larguraGrupo * 0.32 ?>" y="230" text-anchor="middle"><?= htmlspecialchars($mes, ENT_QUOTES, 'UTF-8') ?></text>
+                                <?php endforeach; ?>
+                            </svg>
+                            <div class="legenda-grafico"><span><i class="ponto ponto-verde"></i> Pago</span><span><i class="ponto ponto-laranja"></i> Pendente</span></div>
+                        <?php else: ?>
+                            <p class="sem-dados-grafico">Não há pagamentos nos últimos seis meses para este filtro.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="caixa-grafico chart-container">
                     <h3>Pagamentos por situação</h3>
                     <div class="area-rosca canvas-wrapper donut-wrapper">
                         <div class="donut-chart-box">
-                            <canvas id="donutChart"></canvas>
+                            <div class="rosca-grafico" role="img" aria-label="Pagamentos: <?= number_format($percentualPagoGrafico, 1, ',', '') ?>% pagos e <?= number_format($percentualPendenteGrafico, 1, ',', '') ?>% pendentes" style="background: <?= $somaTotal > 0 ? 'conic-gradient(#22c55e 0 ' . $percentualPagoGrafico . '%, #ea580c ' . $percentualPagoGrafico . '% 100%)' : '#e5e7eb' ?>;"></div>
                             <div class="donut-center-info">
                                 <span class="donut-center-title">Total</span>
                                 <strong class="donut-center-val">R$ <?= number_format($somaTotal, 2, ',', '.'); ?></strong>
@@ -247,115 +295,5 @@ $pendentes = [
         </main>
     </div>
 
-    <script>
-    const labelsMeses = <?= json_encode($labelsMeses); ?>;
-    const valoresPago = <?= json_encode($valoresPago); ?>;
-    const valoresPendente = <?= json_encode($valoresPendente); ?>;
-
-    new Chart(document.getElementById('barChart'), {
-        type: 'bar',
-        data: {
-            labels: labelsMeses,
-            datasets: [
-                {
-                    label: 'Pago',
-                    data: valoresPago,
-                    backgroundColor: '#22c55e',
-                    borderRadius: 4,
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.6
-                },
-                {
-                    label: 'Pendente',
-                    data: valoresPendente,
-                    backgroundColor: '#f97316',
-                    borderRadius: 4,
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.6
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 12,
-                        boxHeight: 12,
-                        usePointStyle: false,
-                        font: { size: 12, family: 'Inter' },
-                        color: '#374151',
-                        padding: 15
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 40000,
-                    ticks: {
-                        stepSize: 10000,
-                        callback: function(value) {
-                            return 'R$ ' + value.toLocaleString('pt-BR');
-                        },
-                        font: { size: 11, family: 'Inter' },
-                        color: '#6b7280'
-                    },
-                    grid: {
-                        color: '#f3f4f6'
-                    },
-                    border: {
-                        display: false
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        font: { size: 11, family: 'Inter' },
-                        color: '#6b7280'
-                    },
-                    border: {
-                        color: '#e5e7eb'
-                    }
-                }
-            }
-        }
-    });
-
-    new Chart(document.getElementById('donutChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Pagamentos realizados', 'Pagamentos pendentes'],
-            datasets: [{
-                data: [<?= $totalPago; ?>, <?= $totalPendente; ?>],
-                backgroundColor: ['#22c55e', '#ea580c'],
-                borderWidth: 0,
-                hoverOffset: 3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return ' R$ ' + Number(context.raw).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-                        }
-                    }
-                }
-            },
-            cutout: '72%'
-        }
-    });
-    </script>
 </body>
 </html>

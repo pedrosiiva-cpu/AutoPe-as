@@ -2,26 +2,28 @@
 
 
 <?php
+require_once __DIR__ . '/auth.php';
 
-$erro = "";
-
-$arquivoUsuarios = __DIR__ . "/usuarios.json";
-$usuarios = ["admin" => "123456"];
-if (file_exists($arquivoUsuarios)) {
-    $dados = json_decode(file_get_contents($arquivoUsuarios), true);
-    if (is_array($dados)) {
-        $usuarios = $dados;
-    }
-}
+$erro = '';
+$usuarios = carregarUsuarios();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $usuario = trim($_POST["usuario"] ?? "");
     $senha = $_POST["senha"] ?? "";
 
-    if (isset($usuarios[$usuario]) && $usuarios[$usuario] === $senha) {
-
-        header("Location: funcionarios.html");
+    $armazenada = $usuarios[$usuario] ?? null;
+    $valida = is_string($armazenada) && (password_get_info($armazenada)['algo'] !== null
+        ? password_verify($senha, $armazenada)
+        : hash_equals($armazenada, $senha));
+    if ($valida) {
+        if (password_get_info($armazenada)['algo'] === null) {
+            $usuarios[$usuario] = password_hash($senha, PASSWORD_DEFAULT);
+            salvarUsuarios($usuarios);
+        }
+        session_regenerate_id(true);
+        $_SESSION['usuario'] = $usuario;
+        header('Location: funcionarios.php');
         exit;
 
     } else {
@@ -152,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </label>
 
                         <a href="editaSenha.php" class="esqueceu">
-                            Esqueceu sua senha?
+                            Alterar senha (após entrar)
                         </a>
 
                     </div>

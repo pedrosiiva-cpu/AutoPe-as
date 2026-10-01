@@ -1,7 +1,8 @@
 <?php
 
-require_once "crud.php";
-require_once "conexao.php";
+require_once 'auth.php';
+exigirLogin();
+require_once 'init.php';
 
 $hoje = date('Y-m-d');
 $fim = date('Y-m-d', strtotime('+7 days'));
@@ -297,14 +298,13 @@ $quantidadeProximos = count($proximosPrazos);
                     </svg>
                     Funcionários
                 </a>
-                <a href="pagamentos.php" class="nav-link">
+                <a href="relatorio.php" class="nav-link">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="5" width="20" height="14" rx="2.5" />
                         <line x1="2" y1="10" x2="22" y2="10" />
                     </svg>
                     Pagamentos
-                </a>
                 </a>
                 <a href="relatorio.php" class="nav-link">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -317,7 +317,7 @@ $quantidadeProximos = count($proximosPrazos);
                 </a>
             </nav>
             <div class="nav-footer">
-                <a href="#" class="nav-link logout">
+                <a href="logout.php" class="nav-link logout">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
