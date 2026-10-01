@@ -1,19 +1,16 @@
 <?php
 
-$host = 'localhost';
-$dbname = 'db_autopecas';
-$user = 'root';
-$password = '';
+$host = "localhost";
+$port = 3306;
+$dbname = "db_autopecas";
+$username = "root";
+$password = "";
 
-try {
-    $pdo = new PDO(
-        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
-        $user,
-        $password
-    );
+$conexao = new mysqli($host, $username, $password, $dbname, $port);
 
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-} catch (PDOException $e) {
-    die("Erro na conexão com o banco: " . $e->getMessage());
+if  ($conexao->connect_error) {
+    die("Erro na conexão com o banco de dados.");
 }
+
+$conexao->set_charset("utf8");
+?>
