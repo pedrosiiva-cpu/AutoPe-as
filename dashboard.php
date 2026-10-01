@@ -713,11 +713,6 @@ $quantidadeProximos = count($proximosPrazos);
                         Resumo financeiro (Este mês)
                     </h3>
 
-                    <select class="seletor-mes">
-                        <option>Este mês</option>
-                        <option>Mês passado</option>
-                    </select>
-
                 </div>
 
                 <div class="resumo">

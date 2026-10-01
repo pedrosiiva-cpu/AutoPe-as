@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 $host = "localhost";
 $port = "3306";
-$dbname = "sistema_pagamento_funcionarios";
+$dbname = "db_autopecas";
 $username = "root";
 $password = "";
 
