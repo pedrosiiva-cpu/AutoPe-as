@@ -5,6 +5,7 @@ session_start();
 require 'init.php';
 require 'crud.php';
 require 'funcoes.php';
+require_once 'conexao.php';
 
 $busca = trim((string) ($_GET['busca'] ?? ''));
 $situacao = (string) ($_GET['situacao'] ?? 'Todos');
@@ -83,7 +84,9 @@ $cargosDisponiveis = ['Todos', 'Mecânico', 'Financeiro', 'Estoquista', 'Atenden
     <div class="app">
         <aside class="sidebar">
             <div class="brand">
-                <div class="brand-icon"></div>
+                <div class="img-logo">
+                    <img src="imagens/remove.png" alt="">
+                </div>
                 <div class="brand-name">AUTOPEÇAS</div>
                 <div class="brand-sub">GESTÃO DE PAGAMENTOS</div>
             </div>
