@@ -434,7 +434,7 @@ $quantidadeProximos = count($proximosPrazos);
 
                     <div class="cabecalho-box">
                         <h3>Pagamentos Recentes</h3>
-                        <a href="#" class="botao-ver">Ver Todos</a>
+                        <a href="pagamentos.php" class="botao-ver">Ver Todos</a>
                     </div>
 
                     <div class="area-tabela">
@@ -500,7 +500,7 @@ $quantidadeProximos = count($proximosPrazos);
                                         </td>
 
                                         <td>
-                                            <a href="#" class="botao-tres">:</a>
+                                            <a href="visualizar_pagamento.php?id=<?= (int) $pagamento['id'] ?>" class="botao-tres" aria-label="Ver pagamento de <?= escapar($pagamento['nome']) ?>">:</a>
                                         </td>
 
                                     </tr>
@@ -535,7 +535,7 @@ $quantidadeProximos = count($proximosPrazos);
                             Próximos prazos e alertas
                         </h3>
 
-                        <a href="#" class="botao-ver">
+                        <a href="prazos_alertas.php" class="botao-ver">
                             Ver Todos
                         </a>
 

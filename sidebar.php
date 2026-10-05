@@ -2,7 +2,9 @@
 $paginaSidebar = basename($_SERVER['PHP_SELF'] ?? '');
 $itemSidebarAtivo = match ($paginaSidebar) {
     'dashboard.php' => 'dashboard',
-    'funcionarios.php', 'funcionario_form.php' => 'funcionarios',
+    'funcionarios.php', 'funcionario_form.php', 'editaSenha.php' => 'funcionarios',
+    'pagamentos.php', 'cadastrar_pagamento.php', 'editar_pagamento.php', 'excluir_pagamento.php', 'visualizar_pagamento.php' => 'pagamentos',
+    'prazos_alertas.php' => 'prazos',
     'relatorio.php' => 'relatorios',
     default => '',
 };
@@ -26,7 +28,7 @@ $itemSidebarAtivo = match ($paginaSidebar) {
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg>
             <span>Pagamentos</span>
         </a>
-        <a href="prazos_alertas.php" class="app-sidebar-link">
+        <a href="prazos_alertas.php" class="app-sidebar-link<?= $itemSidebarAtivo === 'prazos' ? ' active' : '' ?>"<?= $itemSidebarAtivo === 'prazos' ? ' aria-current="page"' : '' ?>>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
             <span>Prazos e alertas</span>
         </a>

@@ -3,6 +3,7 @@
 
 <?php
 require_once __DIR__ . '/auth.php';
+redirecionarLoginSeAutenticado();
 
 $erro = '';
 $usuarios = carregarUsuarios();
@@ -44,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <title>AutoPeças Login</title>
 
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="css/login.css">
 
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"

@@ -52,12 +52,15 @@ $flash = obterFlash();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="css/funcionarios.css">
+<link rel="stylesheet" href="css/sidebar.css">
 <title><?= htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') ?> | AutoPeças</title>
 </head>
 <body>
 <div class="app">
-<div class="main" style="width:100%;">
+<?php require __DIR__ . '/sidebar.php'; ?>
+<div class="main" style="width:auto;flex:1;min-width:0;">
 <header class="topbar">
+<button type="button" class="menu-btn app-sidebar-toggle" aria-label="Abrir menu"><span aria-hidden="true">☰</span></button>
 <div class="page-title">
 <h1><?= htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') ?></h1>
 <p>AutoPeças — Gestão de Pagamentos</p>
@@ -133,4 +136,3 @@ style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:
 </div>
 </body>
 </html>
-

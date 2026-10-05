@@ -1,6 +1,8 @@
 <?php
+require_once __DIR__ . '/auth.php';
+exigirLogin();
 
-include 'conexao.php';
+require_once 'init.php';
 include 'crud.php';
 
 $mensagem = "";
@@ -88,84 +90,16 @@ if (isset($_POST['cadastrar'])) {
         rel="stylesheet"
         href="css/pagamentos.css"
     >
+<link rel="stylesheet" href="css/sidebar.css">
 </head>
 
 <body>
 <div class="app">
-    <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-icon">
-                <span class="material-symbols-outlined">
-                    directions_car
-                </span>
-            </div>
-            <div class="brand-name">
-                AUTOPEÇAS
-            </div>
-            <div class="brand-sub">
-                GESTÃO DE PAGAMENTOS
-            </div>
-        </div>
-
-        <nav class="nav-menu">
-            <a href="dashboard.php" class="nav-link">
-                <span class="material-symbols-outlined">
-                    home
-                </span>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="funcionarios.php" class="nav-link">
-                <span class="material-symbols-outlined">
-                    groups
-                </span>
-                <span>Funcionários</span>
-
-            </a>
-
-            <a
-                href="pagamentos.php"
-                class="nav-link active"
-            >
-
-                <span class="material-symbols-outlined">
-                    payments
-                </span>
-
-                <span>Pagamentos</span>
-
-            </a>
-            <a
-                href="prazos_alertas.php"
-                class="nav-link"
-            >
-                <span class="material-symbols-outlined">
-                    notifications
-                </span>
-                <span>Prazos e Alertas</span>
-            </a>
-
-            <a href="relatorios.php" class="nav-link">
-                <span class="material-symbols-outlined">
-                    bar_chart
-                </span>
-                <span>Relatórios</span>
-            </a>
-        </nav>
-
-        <div class="nav-footer">
-            <a href="index.php" class="nav-link logout">
-                <span class="material-symbols-outlined">
-                    logout
-                </span>
-                <span>Sair</span>
-            </a>
-        </div>
-    </aside>
+    <?php require __DIR__ . '/sidebar.php'; ?>
 
     <main class="main">
         <header class="topbar">
-            <div class="menu-btn">
+            <div class="menu-btn app-sidebar-toggle">
                 <span class="material-symbols-outlined">
                     menu
                 </span>

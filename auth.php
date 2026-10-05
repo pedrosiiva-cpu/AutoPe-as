@@ -13,6 +13,14 @@ function exigirLogin(): void
     }
 }
 
+function redirecionarLoginSeAutenticado(): void
+{
+    if (!empty($_SESSION['usuario'])) {
+        header('Location: funcionarios.php');
+        exit;
+    }
+}
+
 function carregarUsuarios(): array
 {
     $arquivo = __DIR__ . '/usuarios.json';

@@ -1,6 +1,8 @@
 <?php
+require_once __DIR__ . '/auth.php';
+exigirLogin();
 
-require_once 'conexao.php';
+require_once 'init.php';
 
 if (!isset($pdo)) {
     die('Erro na conexão com o banco de dados.');
@@ -283,6 +285,7 @@ if ($mesProximo > 12) {
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
     >
 
+<link rel="stylesheet" href="css/sidebar.css">
 </head>
 
 <body>
@@ -292,103 +295,7 @@ if ($mesProximo > 12) {
 
     <!-- SIDEBAR -->
 
-    <aside class="sidebar">
-
-        <div class="brand">
-
-            <div class="brand-icon">
-
-                <span class="material-symbols-outlined">
-                    directions_car
-                </span>
-
-            </div>
-
-            <div class="brand-name">
-                AUTOPEÇAS
-            </div>
-
-            <div class="brand-sub">
-                GESTÃO DE PAGAMENTOS
-            </div>
-
-        </div>
-
-
-        <nav class="nav-menu">
-
-            <a href="dashboard.php" class="nav-link">
-
-                <span class="material-symbols-outlined">
-                    home
-                </span>
-
-                Dashboard
-
-            </a>
-
-
-            <a href="funcionarios.php" class="nav-link">
-
-                <span class="material-symbols-outlined">
-                    groups
-                </span>
-
-                Funcionários
-
-            </a>
-
-
-            <a href="pagamentos.php" class="nav-link">
-
-                <span class="material-symbols-outlined">
-                    payments
-                </span>
-
-                Pagamentos
-
-            </a>
-
-
-            <a href="prazos_alertas.php" class="nav-link active">
-
-                <span class="material-symbols-outlined">
-                    notifications
-                </span>
-
-                Prazos e Alertas
-
-            </a>
-
-
-            <a href="relatorios.php" class="nav-link">
-
-                <span class="material-symbols-outlined">
-                    bar_chart
-                </span>
-
-                Relatórios
-
-            </a>
-
-        </nav>
-
-
-        <div class="nav-footer">
-
-            <a href="#" class="nav-link logout">
-
-                <span class="material-symbols-outlined">
-                    logout
-                </span>
-
-                Sair
-
-            </a>
-
-        </div>
-
-    </aside>
+    <?php require __DIR__ . '/sidebar.php'; ?>
 
 
     <!-- MAIN -->
@@ -400,7 +307,7 @@ if ($mesProximo > 12) {
 
         <header class="topbar">
 
-            <div class="menu-icon">
+            <div class="menu-icon app-sidebar-toggle">
 
                 <span class="material-symbols-outlined">
                     menu
