@@ -307,15 +307,6 @@ if ($mesProximo > 12) {
 
         <header class="topbar">
 
-            <div class="menu-icon app-sidebar-toggle">
-
-                <span class="material-symbols-outlined">
-                    menu
-                </span>
-
-            </div>
-
-
             <div class="page-title">
 
                 <h1>

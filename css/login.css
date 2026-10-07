@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -110,41 +112,6 @@ body {
 .campo input:focus {
     border-color: #920b12;
     box-shadow: 0 0 0 3px rgba(146, 11, 18, 0.1);
-}
-
-.acoes {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1.2rem;
-    margin-bottom: 2rem;
-}
-
-.lembrar {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #333;
-    cursor: pointer;
-}
-
-.lembrar input {
-    margin-right: 8px;
-    width: 16px;
-    height: 16px;
-    accent-color: #920b12;
-    cursor: pointer;
-}
-
-.esqueceu {
-    font-size: 0.9rem;
-    color: #920b12;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.esqueceu:hover {
-    text-decoration: underline;
 }
 
 .botao {

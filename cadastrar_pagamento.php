@@ -99,12 +99,6 @@ if (isset($_POST['cadastrar'])) {
 
     <main class="main">
         <header class="topbar">
-            <div class="menu-btn app-sidebar-toggle">
-                <span class="material-symbols-outlined">
-                    menu
-                </span>
-            </div>
-
             <div class="page-title">
                 <h1>Registrar Pagamento</h1>
                 <p>Cadastre um novo pagamento para um funcionário.</p>

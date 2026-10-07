@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 :root {
     --bg-main: #f8f9fa;
     --sidebar-bg: #000000;
@@ -170,18 +172,6 @@ body {
     gap: 15px;
 }
 
-.btn-menu,
-.menu-btn {
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 4px;
-}
-
 .cabecalho-esq h1,
 .topbar-left h1 {
     font-size: 1.4rem;
@@ -202,33 +192,6 @@ body {
     display: flex;
     align-items: center;
     gap: 22px;
-}
-
-.notificacao,
-.notification {
-    position: relative;
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-.notificacao .alerta,
-.notification .badge {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background-color: var(--red-primary);
-    color: white;
-    font-size: 0.6rem;
-    width: 16px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-weight: 700;
 }
 
 .perfil,

@@ -77,14 +77,6 @@ $funcionariosPagos = $conexao->query("
 
         <header class="topbar">
 
-            <div class="menu-btn app-sidebar-toggle">
-
-                <span class="material-symbols-outlined">
-                    menu
-                </span>
-
-            </div>
-
             <div class="page-title">
 
                 <h1>Pagamentos</h1>

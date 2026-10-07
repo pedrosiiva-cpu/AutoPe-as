@@ -105,14 +105,6 @@ $consulta = $pdo->query("
 $proximosPrazos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 $consulta = $pdo->query("
-    SELECT COUNT(*) AS total
-    FROM alertas
-    WHERE visualizado = FALSE
-");
-
-$notificacoes = $consulta->fetch(PDO::FETCH_ASSOC);
-
-$consulta = $pdo->query("
     SELECT nome, perfil
     FROM usuarios
     WHERE ativo = TRUE
@@ -280,10 +272,6 @@ $quantidadeProximos = count($proximosPrazos);
         <header class="cabecalho">
 
             <div class="titulo">
-
-                <button type="button" class="app-sidebar-toggle" aria-label="Abrir menu">
-                    <i class="bi bi-list" aria-hidden="true"></i>
-                </button>
 
                 <div>
                     <h2>Dashboard</h2>

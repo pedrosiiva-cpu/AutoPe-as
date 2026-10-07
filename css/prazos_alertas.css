@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 :root {
     --sidebar-bg: #000000;
     --sidebar-hover: rgba(255, 255, 255, 0.06);
@@ -24,7 +26,7 @@
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', sans-serif;
     background: var(--bg);
     color: var(--text);
 }
@@ -208,19 +210,6 @@ input {
     padding: 20px 30px;
 
     gap: 18px;
-}
-
-.menu-icon {
-    width: 40px;
-    height: 40px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.menu-icon .material-symbols-outlined {
-    font-size: 29px;
 }
 
 .page-title {

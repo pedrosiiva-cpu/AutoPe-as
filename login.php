@@ -1,6 +1,3 @@
-
-
-
 <?php
 require_once __DIR__ . '/auth.php';
 redirecionarLoginSeAutenticado();
@@ -136,27 +133,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <i class="fa-regular fa-eye olho" onclick="toggleSenha('senha', this)"></i>
 
                         </div>
-
-                    </div>
-
-                    <div class="acoes">
-
-                        <label class="lembrar">
-
-                            <input
-                                type="checkbox"
-                                name="lembrar"
-                            >
-
-                            <span class="marcador"></span>
-
-                            Lembrar-me
-
-                        </label>
-
-                        <a href="editaSenha.php" class="esqueceu">
-                            Alterar senha (após entrar)
-                        </a>
 
                     </div>
 

@@ -44,15 +44,3 @@ $itemSidebarAtivo = match ($paginaSidebar) {
         </a>
     </div>
 </aside>
-<script>
-document.addEventListener('click', function (event) {
-    if (event.target.closest('.app-sidebar-toggle')) {
-        document.body.classList.toggle('app-sidebar-open');
-    } else if (event.target.closest('.app-sidebar-link') || event.target === document.body) {
-        document.body.classList.remove('app-sidebar-open');
-    }
-});
-document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') document.body.classList.remove('app-sidebar-open');
-});
-</script>

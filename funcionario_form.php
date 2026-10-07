@@ -60,7 +60,6 @@ $flash = obterFlash();
 <?php require __DIR__ . '/sidebar.php'; ?>
 <div class="main" style="width:auto;flex:1;min-width:0;">
 <header class="topbar">
-<button type="button" class="menu-btn app-sidebar-toggle" aria-label="Abrir menu"><span aria-hidden="true">☰</span></button>
 <div class="page-title">
 <h1><?= htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') ?></h1>
 <p>AutoPeças — Gestão de Pagamentos</p>

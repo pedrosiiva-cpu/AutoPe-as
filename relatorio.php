@@ -53,14 +53,19 @@ if ($funcionarioId !== null) {
     $parametros['funcionario_id'] = $funcionarioId;
 }
 if ($situacao !== 'todos') {
-    $condicoes[] = 'p.status = :situacao';
-    $parametros['situacao'] = $situacao;
+    if ($situacao === 'pendente') {
+        // Pagamentos vencidos continuam em aberto e entram no grupo de pendentes.
+        $condicoes[] = "p.status IN ('pendente', 'atrasado')";
+    } else {
+        $condicoes[] = 'p.status = :situacao';
+        $parametros['situacao'] = $situacao;
+    }
 }
 $where = implode(' AND ', $condicoes);
 $stmt = $pdo->prepare("SELECT
     COALESCE(SUM(CASE WHEN p.status = 'pago' THEN p.valor ELSE 0 END), 0) AS pago,
-    COALESCE(SUM(CASE WHEN p.status = 'pendente' THEN p.valor ELSE 0 END), 0) AS pendente,
-    COUNT(DISTINCT CASE WHEN p.status IN ('pago','pendente') THEN p.funcionario_id END) AS funcionarios,
+    COALESCE(SUM(CASE WHEN p.status IN ('pendente','atrasado') THEN p.valor ELSE 0 END), 0) AS pendente,
+    COUNT(DISTINCT CASE WHEN p.status IN ('pago','pendente','atrasado') THEN p.funcionario_id END) AS funcionarios,
     COUNT(*) AS quantidade
     FROM pagamentos p WHERE {$where}");
 $stmt->execute($parametros);
@@ -82,7 +87,7 @@ while ($cursor <= $ultimoMes && count($meses) < 36) {
 }
 $stmt = $pdo->prepare("SELECT DATE_FORMAT(p.data_pagamento, '%Y-%m') AS mes,
     SUM(CASE WHEN p.status = 'pago' THEN p.valor ELSE 0 END) AS pago,
-    SUM(CASE WHEN p.status = 'pendente' THEN p.valor ELSE 0 END) AS pendente
+    SUM(CASE WHEN p.status IN ('pendente','atrasado') THEN p.valor ELSE 0 END) AS pendente
     FROM pagamentos p WHERE {$where} GROUP BY DATE_FORMAT(p.data_pagamento, '%Y-%m') ORDER BY mes");
 $stmt->execute($parametros);
 foreach ($stmt->fetchAll() as $linha) {
@@ -103,7 +108,7 @@ $maioresPagamentos = $stmt->fetchAll();
 $sqlPendentes = "SELECT f.nome, f.cargo, p.valor, p.data_pagamento AS data_prevista,
     GREATEST(DATEDIFF(CURDATE(), p.data_pagamento), 0) AS dias_atraso
     FROM pagamentos p JOIN funcionarios f ON f.id = p.funcionario_id
-    WHERE {$where} AND p.status = 'pendente' ORDER BY p.data_pagamento ASC, p.id ASC" . ($verTodos ? '' : ' LIMIT 5');
+    WHERE {$where} AND p.status IN ('pendente','atrasado') ORDER BY p.data_pagamento ASC, p.id ASC" . ($verTodos ? '' : ' LIMIT 5');
 $stmt = $pdo->prepare($sqlPendentes);
 $stmt->execute($parametros);
 $pendentes = $stmt->fetchAll();
@@ -145,7 +150,7 @@ $urlExportar = 'relatorio.php?' . http_build_query($queryFiltros + ['exportar' =
     <?php require __DIR__ . '/sidebar.php'; ?>
     <main class="conteudo main-content">
         <header class="cabecalho topbar">
-            <div class="cabecalho-esq topbar-left"><button class="btn-menu menu-btn app-sidebar-toggle" type="button" aria-label="Abrir menu"><i class="fa-solid fa-bars"></i></button><div><h1>Relatórios</h1><p class="subtitulo subtitle">Análises financeiras por período e funcionário.</p></div></div>
+            <div class="cabecalho-esq topbar-left"><div><h1>Relatórios</h1><p class="subtitulo subtitle">Análises financeiras por período e funcionário.</p></div></div>
         </header>
         <form method="get" action="relatorio.php" class="filtros filters-section">
             <div class="grupo-filtro filter-group"><label for="data_inicio">Data inicial</label><input type="date" id="data_inicio" name="data_inicio" value="<?= escaparRelatorio($inicio) ?>" required></div>
